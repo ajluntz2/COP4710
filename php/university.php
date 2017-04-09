@@ -24,7 +24,7 @@ class university_info extends database_table
     }
     else
     {
-      $query = "SELECT * FROM (SELECT * FROM universities WHERE universityid > '$after' ORDER BY universityid LIMIT $limit) a ORDER BY universityid";
+      $query = "SELECT * FROM (SELECT * FROM universities WHERE universityid > ".$after." ORDER BY universityid LIMIT ".$limit.") a ORDER BY universityid";
     }
     $row_data = $this->queryRows($query);
     foreach ($row_data as &$row)
@@ -58,7 +58,7 @@ class university_info extends database_table
     }
 
     $query = "INSERT INTO universities(universityid, name, website, email, locationid, super)
-              VALUES ('$universityid', '$name', '$website', '$email', '$location->id', '$super->id')";
+              VALUES (".$universityid.", '$name', '$website', '$email', ".$location->id.", $super->id)";
     $this->query($query);
 
     $univ = new university_info();
@@ -94,7 +94,7 @@ class university_info extends database_table
 
   function update()
   {
-    $query = "SELECT * FROM universities WHERE universityid = $this->id;";
+    $query = "SELECT * FROM universities WHERE universityid = ".$this->id;
     $results = $this->simpleQuery($query);
     if ($results == null)
     {

@@ -35,7 +35,7 @@ class database_table
   public function queryRows($query)
   {
     $results = $this->getDatabase()->query($query);
-    if (mysqli_num_rows($results) > 0)
+    if ($results && mysqli_num_rows($results) > 0)
     {
       while ($row_data = mysqli_fetch_array($results))
       {
@@ -59,6 +59,12 @@ class database_table
       return $rows;
     }
     return null;
+  }
+
+  public function search($row, $search_val)
+  {
+    $query = "SELECT * FROM ".$this->table." WHERE (".$row." LIKE '%".$search_val."%')";
+    return $this->queryRows($query);
   }
 }
 database_table::init();

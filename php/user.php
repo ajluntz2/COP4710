@@ -48,7 +48,7 @@ class user_info extends database_table
 
     $hashedPass = md5($password);
     $insert_query = "INSERT INTO users(userid, password, usertype, universityid, rsoid, first, last, email)
-                     VALUES ('$userid', '$hashedPass', 'USER', $universityid, NULL, '$first', '$last', '$email')";
+                     VALUES (".$userid.", '$hashedPass', 'USER', ".$universityid.", NULL, '$first', '$last', '$email')";
 
     $this->query($insert_query);
 
@@ -89,7 +89,7 @@ class user_info extends database_table
 
   function update()
   {
-    $query = "SELECT * FROM users WHERE userid = '$this->id';";
+    $query = "SELECT * FROM users WHERE userid = ".$this->id;
     $row = $this->simpleQuery($query);
     if ($row !== null)
     {
@@ -107,7 +107,7 @@ class user_info extends database_table
       return false;
     }
 
-    $update_query = "UPDATE users SET first = '$this->first', last = '$this->last', universityid = '$this->universityid', rsoid = '$this->rsoid', email = '$this->email' WHERE 'users'.'userid' = '$this->id';";
+    $update_query = "UPDATE users SET first = '$this->first', last = '$this->last', universityid = ".$this->universityid.", rsoid = ".$this->rsoid.", email = '$this->email' WHERE 'users'.'userid' = ".$this->id;
     return $this->query($update_query);
   }
 
@@ -120,7 +120,7 @@ class user_info extends database_table
     }
 
     $new = md5($new);
-    $update_query = "UPDATE users SET password = '$new' WHERE 'users'.'userid' = '$this->id';";
+    $update_query = "UPDATE users SET password = '$new' WHERE 'users'.'userid' = ".$this->id;
     $ret = $this->query($update_query);
     $this->update();
     return $ret;
