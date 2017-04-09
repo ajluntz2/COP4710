@@ -1,5 +1,6 @@
 <?php
   require_once('config.php');
+  require_once('university.php');
 
   function db_ensure($db)
   {
@@ -110,14 +111,10 @@
     {
       $row = mysqli_fetch_array($check_user);
 
+      require_once('user.php');
       $_SESSION['valid'] = true;
       $_SESSION['timeout'] = time();
       $_SESSION['userid'] = $row['userid'];
-      $_SESSION['email'] = $email;
-      $_SESSION['usertype'] = $row['usertype'];
-      $_SESSION['universityid'] = $row['universityid'];
-      $_SESSION['first'] = $row['first'];
-      $_SESSION['last'] = $row['last'];
 
       return true;
     }
@@ -126,58 +123,6 @@
       $err = 'invalid email or password';
       return false;
     }
-  }
-
-  function db_add_user($db, $first, $last, $email, $password, $university, &$err)
-  {
-      if (!isset($email) || !filter_var($email, FILTER_VALIDATE_EMAIL))
-      {
-        $err = 'bad email';
-        return false;
-      }
-
-      $db = db_ensure($db);
-
-      $universityid = 'NULL';
-      if (isset($university) && !empty(trim($university)))
-      {
-        if (verify_university_on_db($db, $university, $universityid, $errMsg))
-        {
-          $err = $university.' does not exist in database';
-          return false;
-        }
-      }
-
-      if (!verify_email_not_on_db($db, $email, $err))
-      {
-        return false;
-      }
-
-      $userid = 0;
-      $max_userid_query = "SELECT MAX(userid) FROM users";
-      $results = $db->query($max_userid_query);
-      if (mysqli_num_rows($results) > 0)
-      {
-        $row = mysqli_fetch_array($results);
-        $userid = $row['MAX(userid)']+1;
-      }
-
-      //INSERT INTO 'users' ('userid', 'password', 'usertype', 'universityid', 'rsoid', 'first', 'last', 'email') VALUES ('', '', '', NULL, NULL, '', '', '')
-
-      $hashedPass = md5($password);
-      $insert_query = "INSERT INTO users(userid, password, usertype, universityid, rsoid, first, last, email) VALUES ('$userid', '$hashedPass', 'USER', '$universityid', NULL, '$first', '$last', '$email')";
-      $db->query($insert_query);
-
-      if (verify_email_on_db  ($db, $email, $err))
-      {
-        return true;
-      }
-      else
-      {
-        $err = 'user failed to insert into database';
-        return false;
-      }
-      return false;
   }
 
   function db_logout()
@@ -190,14 +135,7 @@
 
     if ($valid)
     {
-      unset($_SESSION['timeout']     );
-      unset($_SESSION['userid']      );
-      unset($_SESSION['email']       );
-      unset($_SESSION['password']    );
-      unset($_SESSION['usertype']    );
-      unset($_SESSION['universityid']);
-      unset($_SESSION['first']       );
-      unset($_SESSION['last']        );
+      $_SESSION['userid'] = null;
     }
     $_SESSION['valid'] = false;
   }

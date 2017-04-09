@@ -7,10 +7,13 @@
       db_logout();
     }
 
+    $univ = new university_info();
+    $univs = $univ->getUniversities(0, -1);
+
     $err = "<h4 class=\"error\">";
     $end = "</h4>";
 
-    $success = $errMsg = "";
+    $success = "";
     $first = $last = $email = $password = $university = "";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST")
@@ -33,18 +36,37 @@
         $last = $_POST['last'];
         $email = $_POST['email'];
         $password = trim($pass1);
-        $university = $_POST['university'];
+        $university = intval($_POST['school']);
 
-        require_once('db_connect.php');
-        $db = new database_connect();
+        require_once('user.php');
+        require_once('university.php');
+        $userinfo = new user_info();
+        $univinfo = null;
 
-        if (db_add_user($db, $first, $last, $email, $password, $university, $errMsg))
+        $gooduniv = false;
+        $useuniv = ($university > -1) ? true : false;
+        if ($useuniv)
+        {
+          $univinfo = new university_info();
+          $gooduniv = $univinfo->updateOnId($university);
+        }
+        else
+        {
+          $university = 'NULL';
+        }
+
+        if ($useuniv && !$gooduniv)
+        {
+          $success = $err.'could not find university in database'.$end;
+        }
+        else if ($userinfo->addUser($first, $last, $email, $password, $university) !== null)
         {
           $success = $err.'SUCCESS'.$end;
 
-          if (!db_login($db, $email, $password, $err))
+          $login_err = '';
+          if (!db_login($userinfo->getDatabase(), $email, $password, $login_err))
           {
-            $success = $err.'Could not login in: '.$errMsg.$end;
+            $success = $err.'Could not login in: '.$login_err.$end;
           }
           else
           {
@@ -53,7 +75,7 @@
         }
         else
         {
-          $success = $err.$errMsg.$end;
+          $success = $err.'an error occured, good luck!'.$end;
         }
       }
     }
@@ -67,17 +89,28 @@
 
    <body>
 
-      <h2>New User Register</h2>
+      <h1>New User Register</h1>
       <div class = "container">
          <form class = "form-register" role = "form" action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method = "post">
 
-            <h4 class = "form-register-heading">COP4710</h4>
-            <h4 class = "form-register-heading"><?php echo $success; ?></h4>
+            <h5 class = "form-register-heading">COP4710</h5>
+            <h5 class = "form-register-heading"><?php echo $success; ?></h5>
             <input type="text" class="form-control" name = "first" placeholder="John" required autofocus></br>
             <input type="text" class="form-control" name = "last" placeholder="Snow" required></br>
 
             <input type="text" class="form-control" name = "email" placeholder="johnsnow@myschool.edu" required></br>
-            <input type="text" class="form-control" name = "university" placeholder="University of Central Florida"></br>
+
+            <select name="school">
+              <?php
+                echo "<option value='-1'>None</option>";
+                foreach ($univs as &$U)
+                {
+                  echo "<option value='".$U->id."'>".$U->name."</option>";
+                }
+              ?>
+            </select>
+
+            <h5 class = "empty-space"></h5>
 
             <input type="password" class="form-control" name="password1" placeholder="password" required>
             <input type="password" class="form-control" name="password2" placeholder="confirm password" required>
@@ -85,7 +118,7 @@
             <button class = "btn btn-lg btn-primary btn-block" type="submit" name="register">Register</button>
          </form>
 
-         <a href="login.php">Login.</a>
+         <h5><a href="login.php">Login.</a></h5>
 
 
       </div>

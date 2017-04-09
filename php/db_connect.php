@@ -1,6 +1,4 @@
 <?php
-  require_once('db_connect.php');
-
   class database_connect
   {
     public $_con = null;
