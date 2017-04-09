@@ -15,7 +15,6 @@ if (!$university->updateOnId($curruser->universityid))
 {
   $university = null;
 }
-
 $rsos = new rso_info();
 $rsos = $rsos->getOnMember($curruser->id);
 ?>

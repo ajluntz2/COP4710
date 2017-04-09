@@ -1,5 +1,7 @@
 <?php
 require_once('db_table.php');
+require_once('user.php');
+require_once('location.php');
 
 class university_info extends database_table
 {
@@ -37,17 +39,19 @@ class university_info extends database_table
     return $rows;
   }
 
-  function addUniversity($super, $location,
+  function addUniversity($superid, $locationid,
                          $name, $website, $email)
   {
-    if (!$super->update() || !$location->update())
+    $super = new user_info();
+    $location = new location_info();
+    if (!$super->updateOnId($superid) || !$location->updateOnId($locationid))
     {
-      return false;
+      return null;
     }
 
     if ($super->usertype !== 'SUPER')
     {
-      return false;
+      return null;
     }
     $universityid = 0;
     $query = "SELECT MAX(universityid) FROM universities";
@@ -58,7 +62,7 @@ class university_info extends database_table
     }
 
     $query = "INSERT INTO universities(universityid, name, website, email, locationid, super)
-              VALUES (".$universityid.", '$name', '$website', '$email', ".$location->id.", $super->id)";
+              VALUES (".$universityid.", '$name', '$website', '$email', ".$location->id.", ".$super->id.")";
     $this->query($query);
 
     $univ = new university_info();
