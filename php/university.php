@@ -53,20 +53,13 @@ class university_info extends database_table
     {
       return null;
     }
-    $universityid = 0;
-    $query = "SELECT MAX(universityid) FROM universities";
-    $results = $super->simpleQuery($query);
-    if ($results !== null)
-    {
-      $universityid = $results['MAX(universityid)']+1;
-    }
 
-    $query = "INSERT INTO universities(universityid, name, website, email, locationid, super)
-              VALUES (".$universityid.", '$name', '$website', '$email', ".$location->id.", ".$super->id.")";
+    $query = "INSERT INTO universities(name, website, email, locationid, super)
+              VALUES ('$name', '$website', '$email', ".$location->id.", ".$super->id.")";
     $this->query($query);
 
     $univ = new university_info();
-    if (!$univ->updateOnId($universityid))
+    if (!$univ->updateOnName($name))
     {
       return null;
     }

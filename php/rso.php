@@ -55,13 +55,6 @@ class rso_info extends database_table
       }
     }
 
-    $rsoid = 0;
-    $maxid = $this->simpleQuery("SELECT MAX(rsoid) FROM rsos");
-    if ($maxid !== null)
-    {
-      $rsoid = $maxid['MAX(rsoid)'] + 1;
-    }
-
     $insert_query;
     if ($univ == null)
     {
@@ -72,13 +65,13 @@ class rso_info extends database_table
     else
     {
       $insert_query = "
-      INSERT INTO rsos(rsoid, name, universityid)
-      VALUES (".$rsoid.", '".$name."', ".$univid.")";
+      INSERT INTO rsos(name, universityid)
+      VALUES ('".$name."', ".$univid.")";
     }
 
     $this->query($insert_query);
     $regrso = new rso_info();
-    if (!$regrso->updateOnId($rsoid))
+    if (!$regrso->updateOnName($name))
     {
       return $regrso;
     }

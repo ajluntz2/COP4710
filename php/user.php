@@ -39,20 +39,13 @@ class user_info extends database_table
       return null;
     }
 
-    $userid = 0;
-    $maxid = $this->simpleQuery("SELECT MAX(userid) FROM users");
-    if ($maxid !== null)
-    {
-      $userid = $maxid['MAX(userid)'] + 1;
-    }
-
     $hashedPass = md5($password);
-    $insert_query = "INSERT INTO users(userid, password, usertype, universityid, rsoid, first, last, email)
-                     VALUES (".$userid.", '$hashedPass', 'USER', ".$universityid.", NULL, '$first', '$last', '$email')";
+    $insert_query = "INSERT INTO users(password, usertype, universityid, rsoid, first, last, email)
+                     VALUES ('$hashedPass', 'USER', ".$universityid.", NULL, '$first', '$last', '$email')";
 
     $this->query($insert_query);
 
-    if (!$reguser->updateOnId($userid))
+    if (!$reguser->updateOnEmail($email))
     {
       return null;
     }

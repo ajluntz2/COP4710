@@ -50,7 +50,7 @@ class database_table
   {
     $query = "SELECT * WHERE $col = '$val' FROM $table";
     $results = $this->getDatabase()->query($query);
-    if (mysqli_num_rows($results) > 0)
+    if ($results && mysqli_num_rows($results) > 0)
     {
       while ($row_data = mysqli_fetch_array($results))
       {

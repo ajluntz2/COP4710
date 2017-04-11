@@ -3,5 +3,5 @@
     db_logout();
 
     require_once("config.php");
-    header('Location:./index.php');
+    echo "<script type='text/javascript'>window.open('./index.php','_parent');</script>";
 ?>

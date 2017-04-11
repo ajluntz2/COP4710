@@ -148,4 +148,64 @@
     }
     return (isset($_SESSION["valid"]) && $_SESSION['valid']);
   }
+
+  function gen_top_nav_tab($name, $class)
+  {
+    return "<a class=".$class.">".$name."</a>";
+  }
+
+  function gen_top_nav($userid)
+  {
+    $end = "</div>";
+    $navbar = "<div class='topnav' id='Topnav'>";
+    $login = gen_top_nav_tab('Login', 'login');
+
+    $user = new user_info();
+    if (!$user->updateOnId($userid))
+    {
+      return $navbar.$login.$end;
+    }
+  }
+
+  function gen_card($title, $titlelink, $type, $mid, $link)
+  {
+    $card = "<div class='card'>
+    <a class='title'>".$title."</a>
+    <a class='type'>".$type."</a>
+    <a class='description'>".$mid."</a>";
+    $card = $card."<a class='link' href=".$link.">".$link."</a>
+    </div>";
+    return $card;
+  }
+
+  function gen_univeristy_card($id, $userid)
+  {
+    $univ = new university_info();
+    if (!$univ->updateOnId($id))
+    {
+      return '';
+    }
+    $user = new user_info();
+    return gen_card($univ->name, $univ->website, 'School', '', $univ->website);
+  }
+
+  function gen_rso_card($id)
+  {
+    $rso = new rso_info();
+    if (!$rso->updateOnId($id))
+    {
+      return '';
+    }
+    return gen_card($rso->name, '', 'RSO','','');
+  }
+
+  function gen_event_card()
+  {
+
+  }
+
+  function gen_user_card()
+  {
+
+  }
 ?>

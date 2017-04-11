@@ -4,6 +4,6 @@
     if (!db_validate())
     {
         require_once('config.php');
-        header('Location:./login.php');
+        echo "<script type='text/javascript'>window.open('./login.php','_parent');</script>";
     }
 ?>
