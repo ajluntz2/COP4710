@@ -1,0 +1,38 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>New Registered Student Organization (RSO)</title>
+
+</head>
+
+<body>
+
+<h1>New Registered Student Organization (RSO)</h1>
+      <div class = "container">
+         <form class = "form-register" role = "form" action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method = "post">
+
+            <h5 class = "form-register-heading">COP4710</h5>
+            <h5 class = "form-register-heading"><?php echo $success; ?></h5>
+            
+            <h5 style="display: inline;">Name:</h5>
+            <input type="text" class="form-control" name = "name" placeholder="Underwater Basket Weaving Club" required autofocus></br>
+            
+            <h5 style="display: inline;">Website:</h5>
+            <input type="text" class="form-control" name = "website" placeholder="www.baskets4life.edu" required></br>
+
+			<h5 style="display: inline;">Email:</h5>
+            <input type="text" class="form-control" name = "email" placeholder="admin@basekets4life.edu" required></br>
+            
+            <h5 style="display: block; padding:0px; padding-top: 16px;">Description:</h5>
+            <textarea type="text" class="form-control" name = "description"required><p>&nbsp;</p></textarea>
+            
+            
+            <h5 class = "empty-space"></h5>
+
+            <button class = "btn btn-lg btn-primary btn-block" type="submit" name="register">Register</button>
+         </form>
+</body>
+</html>
