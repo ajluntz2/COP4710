@@ -9,14 +9,6 @@ require_once ('user.php');
 
 $curruser = new user_info();
 $curruser->updateOnId($_SESSION['userid']);
-
-$university = new university_info();
-if (!$university->updateOnId($curruser->universityid))
-{
-  $university = null;
-}
-$rsos = new rso_info();
-$rsos = $rsos->getOnMember($curruser->id);
 ?>
 
 <html lang = "en">
@@ -27,24 +19,8 @@ $rsos = $rsos->getOnMember($curruser->id);
    </head>
 
    <body>
-     <?php echo gen_top_nav($curruser->id); ?>
-
-     <h2>Welcome, <?php echo $curruser->name(); ?>!</h2>
-     <?php
-     if ($university !== null)
-     {
-       echo gen_univeristy_card($university->id, $curruser->id);
-     }
-     if ($rsos !== null)
-     {
-       foreach ($rsos as &$rso)
-       {
-         echo gen_rso_card($rso['rsoid']);
-       }
-     }
-     ?>
+     <?php echo gen_top_nav($curruser->id, 'Home'); ?>
+     <?php echo gen_univeristy_slider($curruser->id); ?>
+     <?php echo gen_rso_slider($curruser->id); ?>
    </body>
-   <footer>
-     <a href="logout.php">Logout</a>
-   </footer>
 </html>

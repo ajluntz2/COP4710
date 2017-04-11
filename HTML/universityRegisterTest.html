@@ -89,24 +89,26 @@
       #target {
         width: 345px;
       }
-      
+
       .container {
       	display: block;
       	margin: 0 auto;
       }
     </style>
+
+      <link href="../css/style.css" rel="stylesheet">
+
   </head>
   <body>
   <h1>New University</h1>
-        <div class = "container">
-         <form class = "form-register" role = "form" action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method = "post">
-
+         <form class = "form-register" role = "form" action = "../php/registerUniversity.php" method = "post">
+           <div class = "container">
             <h5 class = "form-register-heading">COP4710</h5>
             <h5 class = "form-register-heading"><?php echo $success; ?></h5>
-            
+
             <h5 style="display: inline;">Name:</h5>
             <input type="text" class="form-control" name = "name" placeholder="University of Central Florida" required autofocus></br>
-            
+
             <h5 style="display: inline;">Website:</h5>
             <input type="text" class="form-control" name = "website" placeholder="www.ucf.edu" required></br>
 
@@ -114,14 +116,14 @@
             <input type="text" class="form-control" name = "email" placeholder="admin@ucf.edu" required></br>
             <h5 class = "empty-space"></h5>
 
-            <button class = "btn btn-lg btn-primary btn-block" type="submit" name="register">Register</button>
+            <button class="register-button" type="submit" name="register">Register</button>
             <h5 class = "empty-space"></h5>
+    </div>
          </form>
-         </div>
-         
-         
-         
-  
+
+
+
+
     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
     <script>
@@ -199,7 +201,7 @@
           map.fitBounds(bounds);
         });
       }
-      
+
       function addMarker(pos) {
 
 			// Clear out the old markers.
@@ -222,7 +224,7 @@
 			markers.push( marker );
 			return marker;
 		}
-        
+
         function getMarker()
         {
 			return marker;

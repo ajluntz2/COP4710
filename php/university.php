@@ -11,6 +11,7 @@ class university_info extends database_table
   public $email = '';
   public $locationid = null;
   public $super = null;
+  public $description = null;
 
   function __construct()
   {
@@ -109,6 +110,7 @@ class university_info extends database_table
     $this->email = $row['email'];
     $this->locationid = $row['locationid'];
     $this->super = $row['super'];
+    $this->description = $row['description'];
   }
 }
 ?>

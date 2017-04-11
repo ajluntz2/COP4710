@@ -28,13 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   if ($good)
   {
     $success = $err."SUCCESS!".$end;
-    echo "<script type='text/javascript'>window.open('./index.php','_parent');</script>";
   }
   else
   {
     $success = $err.$errMsg.$end;
     $db->close();
   }
+  echo "<script type='text/javascript'>window.open('../index.php','_parent');</script>";
 }
 ?>
 
@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   </head>
 
   <body>
+    <?php echo gen_top_nav(-1, 'Login'); ?>
     <!-- <iframe
       style="
       border: none;"

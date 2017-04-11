@@ -9,6 +9,7 @@ class rso_info extends database_table
   public $universityid = -1;
   public $approved = -1;
   public $memberid = -1;
+  public $description = null;
 
   function __construct()
   {
@@ -103,6 +104,7 @@ class rso_info extends database_table
     $this->universityid = $row['universityid'];
     $this->approved = $row['approved'];
     $this->memberid = $row['memberid'];
+    $this->description = $row['description'];
   }
 }
 ?>

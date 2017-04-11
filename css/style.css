@@ -33,8 +33,20 @@ img.avatar {
   padding: 16px;
 }
 
+.slider {
+  display: block;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 8px;
+  padding-right: 8px;
+  overflow: scroll;
+  max-height: 30%;
+}
+
 /* Start - Card */
 .card {
+  display: inline-block;
+  min-width: 100px;
   max-width: 500px;
   padding:1.5rem;
   box-shadow:0 1px 2px #aaa;
@@ -93,8 +105,10 @@ img.avatar {
 }
 
 .card a.description {
+  max-width: 500px;
+  max-height: 500px;
   font-size:.9rem;
-  line-height:2.5;
+  line-height:1.5;
   color:gray;
   font-weight:400;
 }
@@ -104,6 +118,10 @@ img.avatar {
   text-align: right;
 }
 
+.card img {
+  max-width: 100%;
+}
+
 .card:hover {
   box-shadow:0 2px 4px #aaa;
 }
@@ -111,6 +129,7 @@ img.avatar {
 
 /* Start - Nav bar */
 .topnav {
+  max-height: 10%;
   overflow: hidden;
   background-color: #333;
 }
@@ -123,6 +142,7 @@ img.avatar {
   padding: 14px 16px;
   text-decoration: none;
   font-size: 17px;
+  transition: all 0.3s ease-out;
 }
 
 .topnav a:hover {
@@ -136,6 +156,31 @@ img.avatar {
 }
 
 .topnav a.login {
+  background-color: #AFAFAF;
+  color: white;
   float: right;
 }
+
+.topnav a.logout {
+  background-color: #AF4C50;
+  float: right;
+}
+
+.topnav a.home {
+    background-color: #0950AF;
+    color: white;
+}
 /* End   - Nav bar */
+
+.register-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
