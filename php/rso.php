@@ -39,36 +39,17 @@ class rso_info extends database_table
   }
 
   function addRSO($adminid, $univid,
-                  $name)
+                  $name, $description='')
   {
     $admin = new user_info();
-    if (!$admin->updateOnId($adminid))
+    $univ = new university_info();
+    if (!$admin->updateOnId($adminid) || !$univ->updateOnId($univid))
     {
       return null;
     }
-    $univ = null;
-    if ($univid > -1)
-    {
-      $univ = new university_info();
-      if (!$univ->updateOnId($univid))
-      {
-        return null;
-      }
-    }
-
-    $insert_query;
-    if ($univ == null)
-    {
-      $insert_query = "
-      INSERT INTO rsos(rsoid, name)
-      VALUES (".$rsoid.", '".$name."')";
-    }
-    else
-    {
-      $insert_query = "
-      INSERT INTO rsos(name, universityid)
-      VALUES ('".$name."', ".$univid.")";
-    }
+    $insert_query = "
+    INSERT INTO rsos(name, universityid, description, adminid, memberid)
+    VALUES ('".$name."', ".$univid.", '".$description."', ".$adminid.", ".$adminid.")";
 
     $this->query($insert_query);
     $regrso = new rso_info();

@@ -1,3 +1,11 @@
+<?php
+require_once ('config.php');
+require_once ('check_session.php');
+require_once('utils.php');
+require_once('rso.php');
+require_once('university.php');
+?>
+
 <head>
 <title>New Registered Student Organization (RSO)</title>
   <link href="../css/style.css" rel="stylesheet">
@@ -14,11 +22,12 @@
             <h5 style="display: inline;">Name:</h5>
             <input type="text" class="form-control" name = "name" placeholder="Underwater Basket Weaving Club" required autofocus></br>
 
-            <h5 style="display: inline;">Website:</h5>
-            <input type="text" class="form-control" name = "website" placeholder="www.baskets4life.edu" required></br>
-
-			<h5 style="display: inline;">Email:</h5>
-            <input type="text" class="form-control" name = "email" placeholder="admin@basekets4life.edu" required></br>
+            <?php $tags = gen_univeristy_options($_SESSION['userid']); ?>
+            <?php if ($tags !== '') { ?>
+              <select name="school">
+                <?php echo gen_univeristy_options($_SESSION['userid']); ?>
+              </select>
+            <?php } ?>
 
             <h5 style="display: block; padding:0px; padding-top: 16px;">Description:</h5>
             <textarea type="text" class="form-control" name = "description"required><p>&nbsp;</p></textarea>

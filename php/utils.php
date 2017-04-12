@@ -171,18 +171,22 @@
     $createUniv = gen_top_nav_tab('New School', '', '../php/registerUniversity.php',$activate);
 
     $navbar = $navbar.gen_top_nav_tab('Home', '', '../php/dashboard.php',$activate);
-    $navbar = $navbar.gen_top_nav_tab('Schools', '', '',$activate);
+    $navbar = $navbar.gen_top_nav_tab('Schools', '../php/universityPage.php', '',$activate);
     $navbar = $navbar.gen_top_nav_tab('RSOs', '', '../php/rsoPage.php',$activate);
     $navbar = $navbar.gen_top_nav_tab('Events', '', '',$activate);
-
-    $navbar = $navbar.gen_top_nav_tab('New RSO', '', '../php/registerRSO.php',$activate);
 
     $user = new user_info();
     $good_user = $user->updateOnId($userid);
 
+    $univ = new university_info();
+    if ($univ->updateOnId($user->universityid))
+    {
+      $navbar = $navbar.gen_top_nav_tab('New RSO', '', '../php/registerRSO.php',$activate);
+    }
+
     if ($user->usertype == 'SUPER')
     {
-       $navbar = $navbar.$createUniv;
+     $navbar = $navbar.$createUniv;
     }
 
     if (!$good_user)
@@ -207,14 +211,14 @@
     return $card;
   }
 
-  function gen_univeristy_card($id, $userid)
+  function gen_univeristy_card($id, $userid=-1)
   {
     $univ = new university_info();
     if (!$univ->updateOnId($id))
     {
       return '';
     }
-    return gen_card($univ->name, '', 'School', $univ->description, $univ->website);
+    return gen_card($univ->name, '../php/universityPage.php?id='.$univ->id, 'School', $univ->description, $univ->website);
   }
 
   function gen_rso_card($id)
@@ -224,7 +228,7 @@
     {
       return '';
     }
-    return gen_card($rso->name, '', 'RSO',$rso->description,'');
+    return gen_card($rso->name, '../php/rsoPage.php?id='.$rso->id, 'RSO',$rso->description,'');
   }
 
   function gen_event_card()
@@ -324,5 +328,38 @@
     ";
 
     return $tableList;
+  }
+
+  function gen_univeristy_options($userid)
+  {
+    $user = new user_info();
+    if (!$user->updateOnId($userid))
+    {
+      return '';
+    }
+
+    $tag = '';
+    if( !is_array( $user->universityid ) && !$user->universityid instanceof Traversable )
+    {
+      $univ = new university_info();
+      if ($univ->updateOnId($user->universityid))
+      {
+        $tag = $tag."<option value='".$univ->id."'>".$univ->name."</option>";
+      }
+    }
+    else
+    {
+      $univ = new university_info();
+      foreach ($user->universityid as &$univid)
+      {
+        $univ->updateOnId($univ->id);
+        if ($univ->updateOnId($user->universityid))
+        {
+          $tag = $tag."<option value='".$univ->id."'>".$univ->name."</option>";
+        }
+      }
+    }
+
+    return $tag;
   }
 ?>
