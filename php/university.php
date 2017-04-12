@@ -30,12 +30,22 @@ class university_info extends database_table
       $query = "SELECT * FROM (SELECT * FROM universities WHERE universityid > ".$after." ORDER BY universityid LIMIT ".$limit.") a ORDER BY universityid";
     }
     $row_data = $this->queryRows($query);
-    foreach ($row_data as &$row)
+    if( !is_array( $row_data ) && !$row_data instanceof Traversable )
     {
-        $univ = new university_info();
-        $univ->updateFields($row);
+      $univ = new university_info();
+      $univ->updateFields($row_data);
 
-        $rows[] = $univ;
+      $rows[] = $univ;
+    }
+    else
+    {
+      foreach ($row_data as &$row)
+      {
+          $univ = new university_info();
+          $univ->updateFields($row);
+
+          $rows[] = $univ;
+      }
     }
     return $rows;
   }

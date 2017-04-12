@@ -310,24 +310,66 @@
     return $slider.$end;
   }
 
-  function gen_univeristy_table_list($first=1, $amount=5)
+  function gen_search_bar($search, $prevpage)
+  {
+    $bar = "<div id='searchBar'>";
+    $bar = $bar."<form method='get' action=".$prevpage.">";
+    if ($search=='')
+    {
+      $bar = $bar."<input type='text' class='searchBar' name='search' size='21' maxlength='120' />";
+    }
+    else
+    {
+      $bar = $bar."<input type='text' class='searchBar' name='search' size='21' maxlength='120' value=".$search." />";
+    }
+    $bar = $bar."<input type='submit' value='search'>";
+    $bar = $bar."</form>";
+    $bar = $bar."</div>";
+    return $bar;
+  }
+
+  function gen_rso_search_list($search, $prevpage)
   {
     $tableList = "
-    <div class='tableList'>
-    <iframe src='../HTML/searchFrame.html'> </iframe>";
+    <div class='tableList'>";
+    $end = "</div>";
 
-    $univ = new university_info();
-    $univs = $univ->getUniversities($first, $amount);
-    foreach ($univs as &$univ)
+    $tableList = $tableList.gen_search_bar($search, $prevpage);
+
+    $rso = new rso_info();
+    $rsos = $rso->search('name', $search);
+    if ($rso == null)
     {
-      $tableList = $tableList.gen_card($univ->name, $univ->website, 'School', '', $univ->website);
+      return $tableList.$end;
+    }
+    foreach ($rsos as &$rso)
+    {
+      $tableList = $tableList.gen_card($rso['name'], '../php/rsoPage.php?id='.$rso['rsoid'], 'RSO', '', '');
     }
 
-    $tableList = $tableList."
-    </div>
-    ";
+    return $tableList.$end;
+  }
 
-    return $tableList;
+  function gen_univeristy_search_list($search, $prevpage)
+  {
+    $tableList = "
+    <div class='tableList'>";
+    $end = "</div>";
+
+    $tableList = $tableList.gen_search_bar($search, $prevpage);
+
+    $univ = new university_info();
+    $univs = $univ->search('name', $search);
+    if ($univs == null)
+    {
+      return $tableList.$end;
+    }
+    foreach ($univs as &$univ)
+    {
+      $tableList = $tableList.gen_card($univ['name'], '../php/universityPage.php?id='.$univ['universityid'], 'School', '', $univ['website']);
+    }
+
+    return $tableList.$end;
   }
 
   function gen_univeristy_options($userid)
