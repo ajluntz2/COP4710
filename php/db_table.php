@@ -61,9 +61,15 @@ class database_table
     return null;
   }
 
-  public function search($row, $search_val)
+  public function search($row, $search_val, $count=5)
   {
-    $query = "SELECT * FROM ".$this->table." WHERE (".$row." LIKE '%".$search_val."%')";
+    $query = "SELECT * FROM ".$this->table." WHERE (".$row." LIKE '%".$search_val."%') LIMIT ".$count."";
+    return $this->queryRows($query);
+  }
+
+  public function searchAfter($row, $search_val, $afterrow, $after, $count=5)
+  {
+    $query = "SELECT * FROM ".$this->table." WHERE (".$afterrow." > ".$after." AND ".$row." LIKE '%".$search_val."%') LIMIT ".$count."";
     return $this->queryRows($query);
   }
 }

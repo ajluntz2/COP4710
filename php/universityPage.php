@@ -12,6 +12,8 @@ $curruser->updateOnId($_SESSION['userid']);
 
 $univ = null;
 $search = '';
+$after = 0;
+$limit = 25;
 if ($_SERVER['REQUEST_METHOD'] == "GET")
 {
   if (isset($_GET['id']))
@@ -25,6 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
   if (isset($_GET['search']))
   {
     $search = $_GET['search'];
+  }
+  if (isset($_GET['after']))
+  {
+    $after = $_GET['after'];
+  }
+  if (isset($_GET['limit']))
+  {
+    $limit = $_GET['limit'];
   }
 }
 ?>
@@ -45,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
          </div>
        <?php } else { ?>
          <?php
-           echo gen_univeristy_search_list($search, '../php/universityPage.php');
+           echo gen_univeristy_search_list($search, '../php/universityPage.php', $after, $limit);
          ?>
        <?php } ?>
 

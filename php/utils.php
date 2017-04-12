@@ -310,7 +310,7 @@
     return $slider.$end;
   }
 
-  function gen_search_bar($search, $prevpage)
+  function gen_search_bar($search, $prevpage, $num=25)
   {
     $bar = "<form method='get' action=".$prevpage.">";
     $bar = $bar."<div class='box'>";
@@ -325,21 +325,35 @@
     }
     $bar = $bar."<button class='icon' type='submit'>GO</button>";
     $bar = $bar."</div>";
+
+    $bar = $bar."<select name='limit'>";
+
+    if ($num % 5 !== 0)
+    {
+      $bar = $bar."<option id='option".$num."' value='".$num."' selected='selected' >".$num."</option>";
+    }
+    for ($i = 1; $i <= 5; ++$i)
+    {
+      $cur = 5*$i;
+      $bar = $bar."<option id='option".$cur."' value='".$cur."' ".($cur==$num?"selected='selected'":"")." >".$cur."</option>";
+    }
+
+    $bar = $bar."</select>";
     $bar = $bar."</div>";
     $bar = $bar."</form>";
     return $bar;
   }
 
-  function gen_rso_search_list($search, $prevpage)
+  function gen_rso_search_list($search, $prevpage, $after=0, $count=25)
   {
     $tableList = "
     <div class='tableList'>";
     $end = "</div>";
 
-    $tableList = $tableList.gen_search_bar($search, $prevpage);
+    $tableList = $tableList.gen_search_bar($search, $prevpage, $count);
 
     $rso = new rso_info();
-    $rsos = $rso->search('name', $search);
+    $rsos = $rso->searchAfter('name', $search, 'rsoid', $after, $count);
     if ($rsos == null)
     {
       return $tableList.$end;
@@ -352,16 +366,16 @@
     return $tableList.$end;
   }
 
-  function gen_univeristy_search_list($search, $prevpage)
+  function gen_univeristy_search_list($search, $prevpage, $after=0, $count=25)
   {
     $tableList = "
     <div class='tableList'>";
     $end = "</div>";
 
-    $tableList = $tableList.gen_search_bar($search, $prevpage);
+    $tableList = $tableList.gen_search_bar($search, $prevpage, $count);
 
     $univ = new university_info();
-    $univs = $univ->search('name', $search);
+    $univs = $univ->searchAfter('name', $search, 'universityid', $after, $count);
     if ($univs == null)
     {
       return $tableList.$end;
