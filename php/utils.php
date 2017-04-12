@@ -171,7 +171,7 @@
     $createUniv = gen_top_nav_tab('New School', '', '../php/registerUniversity.php',$activate);
 
     $navbar = $navbar.gen_top_nav_tab('Home', '', '../php/dashboard.php',$activate);
-    $navbar = $navbar.gen_top_nav_tab('Schools', '../php/universityPage.php', '',$activate);
+    $navbar = $navbar.gen_top_nav_tab('Schools', '', '../php/universityPage.php',$activate);
     $navbar = $navbar.gen_top_nav_tab('RSOs', '', '../php/rsoPage.php',$activate);
     $navbar = $navbar.gen_top_nav_tab('Events', '', '',$activate);
 
