@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-
+<?php $search = isset($_GET['search']) ? $_GET['search'] : ''; ?>
 <html>
 <head>
 
@@ -9,20 +8,17 @@
 <body>
 	<!-- HTML for SEARCH BAR -->
 	<div id="searchBar">
-		<form method="post">
-        
-		<input type="text" class="searchBar" name="searchBar" size="21" 
-        maxlength="120"> <input type="submit" value="search">
-                
-              <select name="ResultCount">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
-              </select>
+		<form method="get">
+
+		<input type="text" class="searchBar" name="search" size="21"
+        maxlength="120">
+				<?php echo $search; ?>
+		</input>
+
+		<input type="submit" value="search">
+
 		</form>
 	</div>
 
 </body>
 </html>
-

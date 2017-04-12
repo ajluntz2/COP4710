@@ -312,19 +312,21 @@
 
   function gen_search_bar($search, $prevpage)
   {
-    $bar = "<div id='searchBar'>";
-    $bar = $bar."<form method='get' action=".$prevpage.">";
+    $bar = "<form method='get' action=".$prevpage.">";
+    $bar = $bar."<div class='box'>";
+    $bar = $bar."<div class='searchBar'>";
     if ($search=='')
     {
-      $bar = $bar."<input type='text' class='searchBar' name='search' size='21' maxlength='120' />";
+      $bar = $bar."<input id='search' type='search' name='search' placeholder='Search...' />";
     }
     else
     {
-      $bar = $bar."<input type='text' class='searchBar' name='search' size='21' maxlength='120' value=".$search." />";
+      $bar = $bar."<input id='search' type='search' name='search' placeholder='Search...' value=".$search." />";
     }
-    $bar = $bar."<input type='submit' value='search'>";
-    $bar = $bar."</form>";
+    $bar = $bar."<button class='icon' type='submit'>GO</button>";
     $bar = $bar."</div>";
+    $bar = $bar."</div>";
+    $bar = $bar."</form>";
     return $bar;
   }
 
@@ -338,7 +340,7 @@
 
     $rso = new rso_info();
     $rsos = $rso->search('name', $search);
-    if ($rso == null)
+    if ($rsos == null)
     {
       return $tableList.$end;
     }
