@@ -85,20 +85,32 @@
 
    <head>
       <title>COP4710 - Register</title>
+      <link href="../css/style.css" rel="stylesheet">
    </head>
 
    <body>
+     <?php echo gen_top_nav(-1, ''); ?>
 
-      <h1>New User Register</h1>
-      <div class = "container">
+
+      <div class = "container" style="width:50%; margin:0 auto;">
+
+        <h1>New User Register</h1>
+
          <form class = "form-register" role = "form" action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method = "post">
 
-            <h5 class = "form-register-heading">COP4710</h5>
             <h5 class = "form-register-heading"><?php echo $success; ?></h5>
-            <input type="text" class="form-control" name = "first" placeholder="John" required autofocus></br>
-            <input type="text" class="form-control" name = "last" placeholder="Snow" required></br>
+            <label><b>First Name</b></label>
+            <input type="text"  name = "first" placeholder="John" required autofocus></br>
 
+            <label><b>Last Name</b></label>
+            <input type="text"  name = "last" placeholder="Snow" required></br>
+
+            <label><b>Email Address</b></label>
             <input type="text" class="form-control" name = "email" placeholder="johnsnow@myschool.edu" required></br>
+
+            <label><b>Choose Your University</b></label>
+
+            <br><br>
 
             <select name="school">
               <?php
@@ -112,13 +124,18 @@
 
             <h5 class = "empty-space"></h5>
 
-            <input type="password" class="form-control" name="password1" placeholder="password" required>
-            <input type="password" class="form-control" name="password2" placeholder="confirm password" required>
+            <label><b>Enter Password</b></label>
+            <input type="password" name="password1" placeholder="password" required>
 
-            <button class = "btn btn-lg btn-primary btn-block" type="submit" name="register">Register</button>
+            <label><b>Confirm Password</b></label>
+            <input type="password" name="password2" placeholder="confirm password" required>
+
+            <div class="container" style="background-color:#f1f1f1">
+              <button class = "buttonLogin" type="submit" name="register">Register</button>
+            </div>
          </form>
 
-         <h5><a href="login.php">Login.</a></h5>
+         <!--<h5><a href="login.php">Login.</a></h5>-->
 
 
       </div>
