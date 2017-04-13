@@ -54,7 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
 
        <?php if ($event !== null) { ?>
          <div class="container">
+
            <?php echo gen_event_card($event->id); ?>
+           
          </div>
        <?php } else { ?>
          <?php

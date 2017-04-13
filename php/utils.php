@@ -202,14 +202,34 @@
     return $navbar.$end;
   }
 
-  function gen_card($title, $cardlink, $type, $mid, $link)
+  function gen_card($title, $cardlink, $type, $mid, $link, $approved=true, $date='')
   {
-    $card = "<div class='card' onclick=\"window.open('".$cardlink."', '_parent')\">
+    $card = "<div class='card' onclick=\"window.open('".$cardlink."', '_parent')\">";
+
+    if (!$approved)
+    {
+      $card .= "
+      <div class='tooltip'>
+      <a class='approve'>!</a>
+      <span class='tooltiptext'>Not approved!</span>
+      </div>";
+    }
+
+    $card .= "
     <a class='title'>".$title."</a>
     <a class='type'>".$type."</a>
     <a class='description'>".$mid."</a>";
-    $card = $card."<a class='link' href='".$link."'>".$link."</a>
-    </div>";
+
+    if ($date !== '')
+    {
+      $card .= "<a class='date'>".$date."</a>";
+    }
+    if ($link !== '')
+    {
+      $card .= "<a class='link' href='".$link."'>".$link."</a>";
+    }
+
+    $card .= "</div>";
     return $card;
   }
 
@@ -230,7 +250,7 @@
     {
       return '';
     }
-    return gen_card($rso->name, '../php/rsoPage.php?id='.$rso->id, 'RSO',$rso->description,'');
+    return gen_card($rso->name, '../php/rsoPage.php?id='.$rso->id, 'RSO',$rso->description,'', $rso->approved);
   }
 
   function gen_event_card($id)
@@ -240,7 +260,7 @@
     {
       return '';
     }
-    return gen_card($event->name, '../php/eventPage.php?id='.$event->id, 'RSO',$event->description,'');
+    return gen_card($event->name, '../php/eventPage.php?id='.$event->id, 'RSO',$event->description,'',$event->approved,$event->startdate);
   }
 
   function gen_user_card($id)
@@ -311,14 +331,16 @@
 
   function gen_event_slider($userid)
   {
-    $user = new user_info();
-    if (!$user->updateOnId($userid))
-    {
-      return '';
-    }
+    $event = new event_info();
     $end = "</div>";
     $slider = "
     <div class='slider'> ";
+
+    $events = $event->search('attending', $userid);
+    foreach ($events as &$event)
+    {
+      $slider .= gen_event_card($event['eventid']);
+    }
 
     return $slider.$end;
   }
@@ -365,7 +387,7 @@
 
     $tableList = $tableList.gen_search_bar($search, $prevpage, $count);
 
-    $event = new rso_info();
+    $event = new event_info();
     $events = $event->searchAfter('name', $search, 'eventid', $after, $count);
     if ($events == null)
     {
@@ -373,7 +395,7 @@
     }
     foreach ($events as &$event)
     {
-      $tableList = $tableList.gen_card($event['name'], '../php/eventPage.php?id='.$rso['eventid'], 'Event', '', '');
+      $tableList = $tableList.gen_event_card($event['eventid']);
     }
 
     return $tableList.$end;
@@ -395,7 +417,7 @@
     }
     foreach ($rsos as &$rso)
     {
-      $tableList = $tableList.gen_card($rso['name'], '../php/rsoPage.php?id='.$rso['rsoid'], 'RSO', '', '');
+      $tableList = $tableList.gen_rso_card($rso['rsoid']);
     }
 
     return $tableList.$end;
@@ -417,7 +439,7 @@
     }
     foreach ($univs as &$univ)
     {
-      $tableList = $tableList.gen_card($univ['name'], '../php/universityPage.php?id='.$univ['universityid'], 'School', '', $univ['website']);
+      $tableList = $tableList.gen_univeristy_card($univ['universityid']);
     }
 
     return $tableList.$end;

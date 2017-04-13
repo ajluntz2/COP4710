@@ -17,10 +17,12 @@ class event_info extends database_table
   public $length = '';
   public $days = '';
   public $enddate = '';
-  public $fequency = '';
+  public $frequency = '';
 
   public $email = '';
   public $phone = -1;
+
+  public $approved = false;
 
   function __construct()
   {
@@ -85,7 +87,7 @@ class event_info extends database_table
 
   private function updateFields($row)
   {
-    $this->id = $row['userid'];
+    $this->id = $row['eventid'];
     $this->name = $row['name'];
     $this->adminid = $row['adminid'];
     $this->locationid = $row['locationid'];
@@ -99,9 +101,10 @@ class event_info extends database_table
     $this->length = $row['length'];
     $this->days = $row['days'];
     $this->enddate = $row['enddate'];
-    $this->fequency = $row['fequency'];
+    $this->frequency = $row['frequency'];
     $this->email = $row['email'];
-    $this->phone = $row['phone'];  
+    $this->phone = $row['phone'];
+    $this->approved = $row['approved'];
   }
 }
 ?>

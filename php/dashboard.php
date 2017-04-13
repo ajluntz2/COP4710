@@ -22,5 +22,6 @@ $curruser->updateOnId($_SESSION['userid']);
      <?php echo gen_top_nav($curruser->id, 'Home'); ?>
      <?php echo gen_univeristy_slider($curruser->id); ?>
      <?php echo gen_rso_slider($curruser->id); ?>
+     <?php echo gen_event_slider($curruser->id); ?>
    </body>
 </html>
