@@ -42,7 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
 <html lang = "en">
 
    <head>
-    <title>COP4710 - Schools</title>
+    <title>COP4710 - 
+    <?php if ($rso !== null) { echo $rso->name; }
+          else { echo "RSOs"; } ?>
+    </title>
     <link href="../css/style.css" rel="stylesheet">
    </head>
 

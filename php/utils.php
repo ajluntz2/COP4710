@@ -1,6 +1,7 @@
 <?php
   require_once('config.php');
   require_once('university.php');
+  require_once('event.php');
 
   function db_ensure($db)
   {
@@ -173,7 +174,7 @@
     $navbar = $navbar.gen_top_nav_tab('Home', '', '../php/dashboard.php',$activate);
     $navbar = $navbar.gen_top_nav_tab('Schools', '', '../php/universityPage.php',$activate);
     $navbar = $navbar.gen_top_nav_tab('RSOs', '', '../php/rsoPage.php',$activate);
-    $navbar = $navbar.gen_top_nav_tab('Events', '', '',$activate);
+    $navbar = $navbar.gen_top_nav_tab('Events', '', '../php/eventPage.php',$activate);
 
     $user = new user_info();
     $good_user = $user->updateOnId($userid);
@@ -231,14 +232,25 @@
     return gen_card($rso->name, '../php/rsoPage.php?id='.$rso->id, 'RSO',$rso->description,'');
   }
 
-  function gen_event_card()
+  function gen_event_card($id)
   {
-
+    $event = new event_info();
+    if (!$event->updateOnId($id))
+    {
+      return '';
+    }
+    return gen_card($event->name, '../php/eventPage.php?id='.$event->id, 'RSO',$event->description,'');
   }
 
-  function gen_user_card()
+  function gen_user_card($id)
   {
-
+    $user = new user_info();
+    if (!$user->updateOnId($id))
+    {
+      return '';
+    }
+    // return gen_card($event->name, '../php/evetPage.php?id='.$event->id, 'RSO',$event->description,'');
+    return '';
   }
 
   function gen_univeristy_slider($userid)

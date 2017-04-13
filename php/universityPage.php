@@ -11,6 +11,7 @@ $curruser = new user_info();
 $curruser->updateOnId($_SESSION['userid']);
 
 $univ = null;
+$location = null;
 $search = '';
 $after = 0;
 $limit = 25;
@@ -22,6 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
     if (!$univ->updateOnId($_GET['id']))
     {
       $univ = null;
+    }
+    else
+    {
+      $location = new location_info();
+      if (!$location->updateOnId($univ->locationid))
+      {
+        $location = null;
+      }
     }
   }
   if (isset($_GET['search']))
@@ -42,7 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
 <html lang = "en">
 
    <head>
-    <title>COP4710 - Schools</title>
+    <title>COP4710 -
+    <?php if ($univ !== null) { echo $univ->name; }
+          else { echo "Schools"; } ?>
+    </title>
 
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
@@ -177,7 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
     </div>
 
     <div id="column2" style="float:left; margin:0; width:50%;">
-      <input id="pac-input" class="controls" type="text" placeholder="Search Box">
       <div id="map" style="height: 50%; width:100%;"></div>
     </div>
 
@@ -201,100 +212,22 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
          // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
          function initAutocomplete() {
+           var latitude = <?php echo $location->latitude; ?>;
+           var longitude = <?php echo $location->longitude; ?>;
            var map = new google.maps.Map(document.getElementById('map'), {
-             center: {lat: 28.6024, lng: -81.2001},
+             center: {lat:latitude, lng:longitude},
              zoom: 15,
              mapTypeId: 'roadmap'
            });
 
-           // Create the search box and link it to the UI element.
-           var input = document.getElementById('pac-input');
-           var searchBox = new google.maps.places.SearchBox(input);
-           map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-           // Bias the SearchBox results towards current map's viewport.
-           map.addListener('bounds_changed', function() {
-             searchBox.setBounds(map.getBounds());
-           });
-
-           var markers = [];
-           // Listen for the event fired when the user selects a prediction and retrieve
-           // more details for that place.
-           searchBox.addListener('places_changed', function() {
-             var places = searchBox.getPlaces();
-
-             if (places.length == 0) {
-               return;
-             }
-
-             // Clear out the old markers.
-             markers.forEach(function(marker) {
-               marker.setMap(null);
-             });
-             markers = [];
-
-             // For each place, get the icon, name and location.
-             var bounds = new google.maps.LatLngBounds();
-             places.forEach(function(place) {
-               if (!place.geometry) {
-                 console.log("Returned place contains no geometry");
-                 return;
-               }
-               var icon = {
-                 url: place.icon,
-                 size: new google.maps.Size(71, 71),
-                 origin: new google.maps.Point(0, 0),
-                 anchor: new google.maps.Point(17, 34),
-                 scaledSize: new google.maps.Size(25, 25)
-               };
-
-               // Create a marker for each place.
-               markers.push(new google.maps.Marker({
-                 map: map,
-                 icon: icon,
-                 title: place.name,
-                 position: place.geometry.location
-               }));
-
-               if (place.geometry.viewport) {
-                 // Only geocodes have viewport.
-                 bounds.union(place.geometry.viewport);
-               } else {
-                 bounds.extend(place.geometry.location);
-               }
-             });
-             map.fitBounds(bounds);
-           });
+           marker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+            position: new google.maps.LatLng(latitude, longitude)
+          });
+          marker.addListener('click', toggleBounce);
          }
-
-         function addMarker(pos) {
-
-   			// Clear out the old markers.
-   			markers.forEach(function (marker) {
-   				marker.setMap(null);
-   			});
-   			markers = [];
-
-   			// Add Marker
-   			var marker = new google.maps.Marker({
-   				draggable: true,
-   				position: pos,
-   				map: map
-   			});
-
-   			google.maps.event.addListener(marker, 'dragend', function (event) {
-   				marker_pos = this.getPosition();
-   			});
-
-   			markers.push( marker );
-   			return marker;
-   		}
-
-           function getMarker()
-           {
-   			return marker;
-   		}
-
        </script>
        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSVinGJtXybbaYrT5XLRQhSwY9x3Tbxfo&libraries=places&callback=initAutocomplete"
             async defer></script>
