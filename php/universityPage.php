@@ -50,8 +50,21 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
        <?php echo gen_top_nav($curruser->id, 'Schools'); ?>
 
        <?php if ($univ !== null) { ?>
+         <!-- this is the container where the individual page for the University comes up -->
+
          <div class="container">
-           <?php echo gen_univeristy_card($univ->id); ?>
+           <h1><?php echo $univ->name; ?></h1>
+           <?php echo "<label><b>Website: </b></label>" ; echo $univ->website; ?>
+
+           <br>
+
+           <?php echo "<label><b>Email: </b></label>"; echo $univ->email; ?>
+           <p><?php echo $univ->description; ?></p>
+
+           <div class="container" style="background-color:#f1f1f1">
+             <button class = "buttonLogin" type="submit" name="register">Register</button>
+           </div>
+
          </div>
        <?php } else { ?>
          <?php
