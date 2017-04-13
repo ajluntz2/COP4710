@@ -175,6 +175,7 @@
     $navbar = $navbar.gen_top_nav_tab('Schools', '', '../php/universityPage.php',$activate);
     $navbar = $navbar.gen_top_nav_tab('RSOs', '', '../php/rsoPage.php',$activate);
     $navbar = $navbar.gen_top_nav_tab('Events', '', '../php/eventPage.php',$activate);
+    $navbar = $navbar.gen_top_nav_tab('Create Event', '', '../php/registerEvent.php',$activate);
 
     $user = new user_info();
     $good_user = $user->updateOnId($userid);
@@ -356,6 +357,28 @@
     return $bar;
   }
 
+  function gen_event_search_list($search, $prevpage, $after=0, $count=25)
+  {
+    $tableList = "
+    <div class='tableList'>";
+    $end = "</div>";
+
+    $tableList = $tableList.gen_search_bar($search, $prevpage, $count);
+
+    $event = new rso_info();
+    $events = $event->searchAfter('name', $search, 'eventid', $after, $count);
+    if ($events == null)
+    {
+      return $tableList.$end;
+    }
+    foreach ($events as &$event)
+    {
+      $tableList = $tableList.gen_card($event['name'], '../php/eventPage.php?id='.$rso['eventid'], 'Event', '', '');
+    }
+
+    return $tableList.$end;
+  }
+
   function gen_rso_search_list($search, $prevpage, $after=0, $count=25)
   {
     $tableList = "
@@ -430,6 +453,24 @@
       }
     }
 
+    return $tag;
+  }
+
+  function gen_rso_options($userid)
+  {
+    $rso = new rso_info();
+    $rsos = $rso->search('memberid', $userid, -1);
+
+    if ($rsos == null)
+    {
+      return '';
+    }
+
+    $tag = '';
+    foreach ($rsos as &$rso)
+    {
+      $tag .= "<option value='".$rso['rsoid']."'>".$rso['name']."</option>";
+    }
     return $tag;
   }
 ?>

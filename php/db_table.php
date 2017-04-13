@@ -63,8 +63,16 @@ class database_table
 
   public function search($row, $search_val, $count=5)
   {
+    if ($count > 0)
+    {
     $query = "SELECT * FROM ".$this->table." WHERE (".$row." LIKE '%".$search_val."%') LIMIT ".$count."";
     return $this->queryRows($query);
+    }
+    else
+    {
+      $query = "SELECT * FROM ".$this->table." WHERE (".$row." LIKE '%".$search_val."%')";
+      return $this->queryRows($query);
+    }
   }
 
   public function searchAfter($row, $search_val, $afterrow, $after, $count=5)

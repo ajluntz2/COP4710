@@ -19,6 +19,9 @@ class event_info extends database_table
   public $enddate = '';
   public $fequency = '';
 
+  public $email = '';
+  public $phone = -1;
+
   function __construct()
   {
     $this->table = 'events';
@@ -28,11 +31,16 @@ class event_info extends database_table
                     $rsoid, $ratingid, $category,
                     $description, $startdate, $enddate,
                     $days, $time, $length,
-                    $frequency)
+                    $frequency,
+                    $email, $phone)
   {
     $insert_query = "
-    INSERT INTO events(  name   ,    adminid  ,    locationid  ,    rsoid  ,    universityid  ,    ratingid  ,    category  ,    description  ,    startdate  ,    time  ,    length  ,    days  ,    enddate  ,    frequency)
-    VALUES            (".$name.", ".$adminid.", ".$locationid.", ".$rsoid.", ".$universityid.", ".$ratingid.", ".$category.", ".$description.", ".$startdate.", ".$time.", ".$length."), ".$days.", ".$enddate.", ".$frequency.")
+    INSERT INTO events(  name   ,    adminid  ,    locationid  ,    rsoid  ,    universityid  ,    ratingid  ,
+                         category  ,    description  ,    startdate  ,    time  ,    length  ,    days  ,
+                         enddate  ,    frequency   ,    email  ,    phone)
+    VALUES            (".$name.", ".$adminid.", ".$locationid.", ".$rsoid.", ".$universityid.", ".$ratingid.",
+                       ".$category.", ".$description.", ".$startdate.", ".$time.", ".$length."), ".$days.",
+                       ".$enddate.", ".$frequency.", ".$email.", ".$phone.")
     ";
 
     $this->query($insert_query);
@@ -92,6 +100,8 @@ class event_info extends database_table
     $this->days = $row['days'];
     $this->enddate = $row['enddate'];
     $this->fequency = $row['fequency'];
+    $this->email = $row['email'];
+    $this->phone = $row['phone'];  
   }
 }
 ?>
