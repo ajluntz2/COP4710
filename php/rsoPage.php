@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
 <html lang = "en">
 
    <head>
-    <title>COP4710 - 
+    <title>COP4710 -
     <?php if ($rso !== null) { echo $rso->name; }
           else { echo "RSOs"; } ?>
     </title>
@@ -53,8 +53,22 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
        <?php echo gen_top_nav($curruser->id, 'RSOs'); ?>
 
        <?php if ($rso !== null) { ?>
-         <div class="container">
-           <?php echo gen_rso_card($rso->id); ?>
+         <div class="container" style="width:50%; margin:0 auto;">
+
+           <h1><?php echo $rso->name; ?></h1>
+
+           <div class="container" style="width:100%; display:block;">
+             <button class = "buttonEdit" type="submit" name="edit">Edit</button>
+
+             <button class = "buttonLogin" type="submit" name="join">Join</button>
+           </div>
+
+           <div style="float:left; margin:0; max-width:50%;">
+             <p><?php echo $rso->description; ?></p>
+         </div>
+           <br>
+           <br>
+
          </div>
        <?php } else { ?>
          <?php
