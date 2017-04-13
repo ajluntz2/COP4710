@@ -2,6 +2,11 @@ form {
   border: 3px solid #f1f1f1;
 }
 
+body {
+    background-image: url("http://www.publicdomainpictures.net/pictures/130000/velka/turquoise-top-gradient-background.jpg");
+    background-color: #cccccc;
+}
+
 input[type=text], input[type=password] {
   width: 100%;
   padding: 12px 20px;
@@ -13,6 +18,15 @@ input[type=text], input[type=password] {
 
 .buttonLogin {
   background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonEdit {
+  background-color: #3498DB;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -54,14 +68,14 @@ img.avatar {
   margin:0 1rem 1rem;
   border-radius:3px;
   user-select:none;
-  animation: fly-in-from-left 1s both;
-  transform-origin: top left;
+  /*animation:fly-in-from-left 1s both;*/
+  transform-origin:top left;
 }
 
-.card:nth-child(odd){
-  animation-name: fly-in-from-right;
-  animation-delay: .8s;
-  transform-origin: top right;
+.card:nth-child(even){
+  /*animation-name:fly-in-from-right;*/
+  animation-delay:1.1s;
+  transform-origin:top right;
 }
 
 @keyframes fly-in-from-bottom {
@@ -93,7 +107,6 @@ img.avatar {
 }
 
 .card a.title {
-  display: inline;
   font-size:2rem;
   font-weight:200;
 }
@@ -117,18 +130,6 @@ img.avatar {
 .card a.link {
   font-size: 12px;
   text-align: right;
-  float: right;
-}
-
-.card a.date {
-  font-size: 12px;
-  text-align: left;
-  float: left;
-}
-
-.card a.approve {
-  color: #AF4C50;
-  font-size: 2rem;
 }
 
 .card img {
@@ -265,27 +266,3 @@ button:hover {
   }
 
 /* End Search Bar*/
-
-.tooltip {
-    position: relative;
-    display: inline-block;
-    /*border-bottom: 1px dotted black;*/
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-
-    /* Position the tooltip */
-    position: absolute;
-    z-index: 1;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-}
