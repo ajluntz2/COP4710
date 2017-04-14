@@ -6,6 +6,8 @@ require_once('utils.php');
 require_once('rso.php');
 require_once('university.php');
 require_once('event.php');
+
+require_once('rating.php');
 ?>
 
 <?php
@@ -19,32 +21,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   // add rating
   // add location
 
+  $locationid = 1; // TODO: fix
+
+  $eventStartTime_Hour = $_POST['eventStartTime_Hour'];
+  $eventStartTime_Minute = $_POST['eventStartTime_Minute'];
+
   $name = $_POST['eventName'];
   $category = $_POST['category'];
   $startDate = $_POST['eventStartDate'];
   $startTime = $eventStartTime_Hour.":".$eventStartTime_Minute.":00";
   $endDate = $_POST['eventEndDate'];
 
+  $frequency = 0; // TODO: please add frequency option
+
   $email = $_POST['eventContactEmail'];
   $phone = $_POST['eventContactPhone'];
 
   $days = '';
-  if ($_POST['monChecked'] == 'Yes') { $days .= 'mon,'; }
-  if ($_POST['tueChecked'] == 'Yes') { $days .= 'tues,'; }
-  if ($_POST['wedChecked'] == 'Yes') { $days .= 'wed,'; }
-  if ($_POST['thuChecked'] == 'Yes') { $days .= 'thur,'; }
-  if ($_POST['friChecked'] == 'Yes') { $days .= 'fri,'; }
-  if ($_POST['satChecked'] == 'Yes') { $days .= 'sat,'; }
-  if ($_POST['sunChecked'] == 'Yes') { $days .= 'sun,'; }
+  if (isset($_POST['monChecked'])) { $days .= "'mon,'"; }
+  if (isset($_POST['tueChecked'])) { $days .= "'tues,'"; }
+  if (isset($_POST['wedChecked'])) { $days .= "'wed,'"; }
+  if (isset($_POST['thuChecked'])) { $days .= "'thur,'"; }
+  if (isset($_POST['friChecked'])) { $days .= "'fri,'"; }
+  if (isset($_POST['satChecked'])) { $days .= "'sat,'"; }
+  if (isset($_POST['sunChecked'])) { $days .= "'sun,'"; }
 
+  $rating = new rating_info();
+  $rating->addRating();
+  $rid = $rating->simpleQuery('SELECT MAX(ratingid) FROM ratings')['MAX(ratingid)'];
 
-  // $event = new event_info();
-  //
-  // $event = $event->addEvent(
-  //   $curruser->id, $curruser->$universityid, /*location*/,
-  //
-  //
-  // );
+  $event = new event_info();
+  $event = $event->addEvent(
+    $curruser->id, $curruser->universityid, $locationid,
+    $_POST['rso'], $rid, $name, $category,
+    $_POST['description'], $startDate, $endDate,
+    $days, $startTime, -1,
+    $frequency,
+    $email, $phone
+  );
+
+  if ($event !== null)
+  {
+    echo "<script>window.open('../php/eventPage.php?id=".$event->id."', '_parent');</script>";
+  }
 }
 ?>
 
@@ -223,8 +242,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
               <input name="eventStartDate" type="text" id="startDatePicker">
 
               <h5 style="display: inline;">Start Time:</h5>
-              <input type="number" class="form-control" name = "eventStartTime_Hour" placeholder="12" min="0" max="24" required>
-              <input type="number" class="form-control" name = "eventStartTime_Minute" placeholder="00" min="0" max="59" required>
+              <input type="number" class="form-control" name = "eventStartTime_Hour" value="12" min="0" max="24" required>
+              <input type="number" class="form-control" name = "eventStartTime_Minute" value="00" min="0" max="59" required>
 
               <br><br>
 

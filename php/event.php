@@ -30,19 +30,21 @@ class event_info extends database_table
   }
 
   function addEvent($userid, $universityid, $locationid,
-                    $rsoid, $ratingid, $category,
+                    $rsoid, $ratingid, $name, $catigory,
                     $description, $startdate, $enddate,
                     $days, $time, $length,
                     $frequency,
                     $email, $phone)
   {
+    $des = mysqli_real_escape_string($this->getDatabase()->_con,$description);
+
     $insert_query = "
     INSERT INTO events(  name   ,    adminid  ,    locationid  ,    rsoid  ,    universityid  ,    ratingid  ,
-                         category  ,    description  ,    startdate  ,    time  ,    length  ,    days  ,
+                         catigory  ,    description  ,    startdate  ,    time  ,    length  ,    days  ,
                          enddate  ,    frequency   ,    email  ,    phone)
-    VALUES            (".$name.", ".$adminid.", ".$locationid.", ".$rsoid.", ".$universityid.", ".$ratingid.",
-                       ".$category.", ".$description.", ".$startdate.", ".$time.", ".$length."), ".$days.",
-                       ".$enddate.", ".$frequency.", ".$email.", ".$phone.")
+    VALUES            ('".$name."', '".$userid."', ".$locationid.", ".$rsoid.", '".$universityid."', '".$ratingid."',
+                       '".$catigory."', \"".$des."\"   , '".$startdate."', '".$time."', '".$length."', '".$days."',
+                       '".$enddate."', '".$frequency."', '".$email."', '".$phone."')
     ";
 
     $this->query($insert_query);
@@ -57,7 +59,7 @@ class event_info extends database_table
 
   function updateOnName($name)
   {
-    $query = "SELECT * FROM events WHERE name = ".$name;
+    $query = "SELECT * FROM events WHERE name = '".$name."'";
     $row = $this->simpleQuery($query);
     if ($row !== null)
     {
@@ -83,6 +85,31 @@ class event_info extends database_table
       return true;
     }
     return false;
+  }
+
+  function syncFields()
+  {
+    $des = mysqli_real_escape_string($this->getDatabase()->_con,$this->description);
+
+    $update_query = "
+    UPDATE events
+    SET
+      name = '".$this->name."',
+      website = '".$this->website."',
+      email = '".$this->email."',
+      phone = '".$this->phone."',
+      catigory = '".$this->catigory."',
+      time = '".$this->time."',
+      days = '".$this->days."',
+      enddate = '".$this->enddate."',
+      frequency = '".$this->frequency."',
+      approved = '".$this->approved."',
+      description = \"".$des."\"
+    WHERE
+      events'.eventid = ".$this->id;
+
+    return $this->query($update_query);
+    // return $update_query;
   }
 
   private function updateFields($row)
