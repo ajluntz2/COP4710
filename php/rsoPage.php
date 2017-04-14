@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                    <button class = "buttonEdit" type="submit" name="edit" onclick="window.open('<?php echo "../php/rsoPage.php?id=".$rso->id."&edit=1"; ?>', '_parent')">Edit</button>
                    <?php } ?>
 
-                   <?php if ($rso->adminid !== $curruser->universityid){ ?>
+                   <?php if ($rso->universityid == $curruser->universityid){ ?>
                    <button class = "buttonLogin" type="submit" name="join">Join</button>
                    <?php } ?>
                  </div>
