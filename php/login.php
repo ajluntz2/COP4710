@@ -59,6 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
       max-height: 500px;
       min-height: 380px;"
 
+      frameBorder="0"
+
       src="../HTML/loginFrame.html"></iframe>
   </body>
 </html>

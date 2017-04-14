@@ -50,6 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     height: 90%;
     width: 100%;"
 
+    frameBorder="0"
+
     src="../php/RSORegisterFrame.php"></iframe>
 </body>
 </html>
