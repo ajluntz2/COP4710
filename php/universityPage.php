@@ -16,8 +16,7 @@ $search = '';
 $after = 0;
 $limit = 25;
 $editing = false;
-if ($_SERVER['REQUEST_METHOD'] == "GET")
-{
+
   if (isset($_GET['id']))
   {
     $univ = new university_info();
@@ -49,6 +48,18 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
   if (isset($_GET['edit']) && $_GET['edit'] == 1 && $univ !== null && $univ->super == $curruser->id)
   {
     $editing = true;
+  }
+
+if ($_SERVER['REQUEST_METHOD'] == "POST")
+{
+  if ($univ !== null)
+  {
+    $univ->name = $_POST['name'];
+    $univ->website = $_POST['website'];
+    $univ->email = $_POST['email'];
+    $univ->description = $_POST['description'];
+
+    $univ->syncFields();
   }
 }
 ?>
@@ -176,41 +187,34 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
 
            <?php if ($editing) { ?>
 
-
-            <div class="container" style="width:100%; display:block;">
-                <?php if ($univ->super == $curruser->id){ ?>
-                <button class = "buttonEdit" type="submit" name="save" onclick="window.open('<?php echo "../php/universityPage.php?id=".$univ->id; ?>', '_parent')">Save</button>
-                <?php } ?>
-
-                <button class = "buttonLogin" type="submit" name="join">Join</button>
-            </div>
-
                <!-- do editing like stuffs in something like this -->
 
-            <form class = "form-register" role = "form" action = "../php/registerUniversity.php" method = "post">
+            <form class = "form-register" role = "form" action = "../php/universityPage.php?id=<?php echo $univ->id; ?>" method = "post">
 
+              <div class="container" style="width:100%; display:block;">
+                  <button class = "buttonEdit" type="submit" name="save">Save</button>
+              </div>
 
+              <div style="display:block;">
+                  <div id="column1" style="float:left; margin:0; width:50%;">
 
-            <div style="display:block;">
-                <div id="column1" style="float:left; margin:0; width:50%;">
+                      <h5 style="display: inline;">Name:</h5>
+                      <input type="text" class="form-control" name = "name" value="<?php echo $univ->name; ?>" required autofocus ></br>
 
-                    <h5 style="display: inline;">Name:</h5>
-                    <input type="text" class="form-control" name = "name" placeholder="<?php echo $univ->name; ?>" required autofocus></br>
+                      <br>
+                      <h5 style="display: inline;">Website:</h5>
+                      <input type="text" class="form-control" name = "website" value="<?php echo $univ->website; ?>" required></br>
+                      <br>
 
-                    <br>
-                    <h5 style="display: inline;">Website:</h5>
-                    <input type="text" class="form-control" name = "website" placeholder="<?php echo $univ->website; ?>" required></br>
-                    <br>
+                      <h5 style="display: inline;">Email:</h5>
+                      <input type="text" class="form-control" name = "email" value="<?php echo $univ->email; ?>"></br>
+                      <br>
 
-                    <h5 style="display: inline;">Email:</h5>
-                    <input type="text" class="form-control" name = "email" placeholder="<?php echo $univ->email; ?>" required></br>
-                    <br>
+                      <h5 style="display: inline;">Description:</h5>
+                      <textarea type="text" class="form-control" name = "description" required><?php echo $univ->description; ?></textarea>
+                      <br>
 
-                    <h5 style="display: inline;">Description:</h5>
-                    <textarea type="text" class="form-control" name = "description" placeholder="<?php echo $univ->description; ?>" required><p>&nbsp;</p></textarea>
-                    <br>
-
-                </div>
+                  </div>
 
                 <div id="column2" style="float:left; margin:0; width:50%;">
                     <div id="map" style="height: 50%; width:100%;"></div>
@@ -225,7 +229,9 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
                <button class = "buttonEdit" type="submit" name="edit" onclick="window.open('<?php echo "../php/universityPage.php?id=".$univ->id."&edit=1"; ?>', '_parent')">Edit</button>
                <?php } ?>
 
+               <?php if ($univ->id !== $curruser->universityid){ ?>
                <button class = "buttonLogin" type="submit" name="join">Join</button>
+               <?php } ?>
              </div>
 
 

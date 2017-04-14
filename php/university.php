@@ -112,6 +112,12 @@ class university_info extends database_table
     return true;
   }
 
+  function syncFields()
+  {
+    $update_query = "UPDATE universities SET name = ".$this->name.", website = ".$this->website.", email = ".$this->email.", description = ".$this->description." WHERE 'universities'.'universityid' = ".$this->id;
+    return $this->query($update_query);
+  }
+
   private function updateFields($row)
   {
     $this->id = $row['universityid'];
