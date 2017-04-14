@@ -379,6 +379,27 @@
     return $bar;
   }
 
+  function gen_prev_next_buttons($page, $after, $count)
+  {
+    $prev_num = $after-$count;
+    $prev_num = ($prev_num < 0) ? 0 : $prev_num;
+    $after_num = $after+$count;
+    $after_num = ($after_num < 0) ? 0 : $after_num;
+
+    $prev = "?after=".$prev_num."&limit=".$count;
+    $next = "?after=".$after_num."&limit=".$count;
+
+    $nextprev = "
+    <div class='nav-buttons'>
+      <span class='prevnext'>
+        <a class='prev' onclick=\"window.open('".$page.$prev."','_parent')\">< prev</a>
+        <a class='next' onclick=\"window.open('".$page.$next."','_parent')\">next ></a>
+      </span>
+    </div>
+    ";
+    return $nextprev;
+  }
+
   function gen_event_search_list($search, $prevpage, $after=0, $count=25)
   {
     $tableList = "
@@ -389,16 +410,15 @@
 
     $event = new event_info();
     $events = $event->searchAfter('name', $search, 'eventid', $after, $count);
-    if ($events == null)
+    if ($events !== null)
     {
-      return $tableList.$end;
-    }
-    foreach ($events as &$event)
-    {
-      $tableList = $tableList.gen_event_card($event['eventid']);
+      foreach ($events as &$event)
+      {
+        $tableList = $tableList.gen_event_card($event['eventid']);
+      }
     }
 
-    return $tableList.$end;
+    return $tableList.gen_prev_next_buttons($prevpage, $after, $count).$end;
   }
 
   function gen_rso_search_list($search, $prevpage, $after=0, $count=25)
@@ -411,16 +431,15 @@
 
     $rso = new rso_info();
     $rsos = $rso->searchAfter('name', $search, 'rsoid', $after, $count);
-    if ($rsos == null)
+    if ($rsos !== null)
     {
-      return $tableList.$end;
-    }
-    foreach ($rsos as &$rso)
-    {
-      $tableList = $tableList.gen_rso_card($rso['rsoid']);
+      foreach ($rsos as &$rso)
+      {
+        $tableList = $tableList.gen_rso_card($rso['rsoid']);
+      }
     }
 
-    return $tableList.$end;
+    return $tableList.gen_prev_next_buttons($prevpage, $after, $count).$end;
   }
 
   function gen_univeristy_search_list($search, $prevpage, $after=0, $count=25)
@@ -433,16 +452,15 @@
 
     $univ = new university_info();
     $univs = $univ->searchAfter('name', $search, 'universityid', $after, $count);
-    if ($univs == null)
+    if ($univs !== null)
     {
-      return $tableList.$end;
-    }
-    foreach ($univs as &$univ)
-    {
-      $tableList = $tableList.gen_univeristy_card($univ['universityid']);
+      foreach ($univs as &$univ)
+      {
+        $tableList = $tableList.gen_univeristy_card($univ['universityid']);
+      }
     }
 
-    return $tableList.$end;
+    return $tableList.gen_prev_next_buttons($prevpage, $after, $count).$end;
   }
 
   function gen_univeristy_options($userid)

@@ -3,8 +3,10 @@ form {
 }
 
 body {
-    background-image: url("http://www.publicdomainpictures.net/pictures/130000/velka/turquoise-top-gradient-background.jpg");
-    background-color: #cccccc;
+  background-image: url("http://www.publicdomainpictures.net/pictures/130000/velka/turquoise-top-gradient-background.jpg");
+  background-color: #cccccc;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 input[type=text], input[type=password] {
@@ -29,6 +31,34 @@ input[type=text], input[type=password] {
   background-color: #3498DB;
   color: white;
   padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-buttons {
+  margin-top: 10px;
+  margin-bottom: 30px;
+  margin-left: 30px;
+}
+
+.next {
+  background-color: #3498DB;
+  color: white;
+  font-weight: bold;
+  text-decoration:  none;
+  padding: 7px 10px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+}
+
+.prev {
+  background-color: #3498DB;
+  color: white;
+  font-weight: bold;
+  text-decoration:  none;
+  padding: 7px 10px;
   margin: 8px 0;
   border: none;
   cursor: pointer;
