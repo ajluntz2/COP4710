@@ -118,7 +118,7 @@ class university_info extends database_table
 
     if ($this->email !== '')
     {
-      $update_query = "UPDATE universities SET name = '".$this->name."', website = '".$this->website."', email = '".$this->email."', description = \"".$des."\" WHERE universities'.universityid = ".$this->id;
+      $update_query = "UPDATE universities SET name = '".$this->name."', website = '".$this->website."', email = '".$this->email."', description = \"".$des."\" WHERE universities.universityid = ".$this->id;
     }
     else
     {
