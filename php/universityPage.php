@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     $univ->email = $_POST['email'];
     $univ->description = $_POST['description'];
 
-    $univ->syncFields();
+    echo $univ->syncFields();
   }
 }
 ?>

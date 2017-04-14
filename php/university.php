@@ -114,8 +114,18 @@ class university_info extends database_table
 
   function syncFields()
   {
-    $update_query = "UPDATE universities SET name = ".$this->name.", website = ".$this->website.", email = ".$this->email.", description = ".$this->description." WHERE 'universities'.'universityid' = ".$this->id;
+    $des = mysqli_real_escape_string($this->getDatabase()->_con,$this->description);
+
+    if ($this->email !== '')
+    {
+      $update_query = "UPDATE universities SET name = '".$this->name."', website = '".$this->website."', email = '".$this->email."', description = \"".$des."\" WHERE universities'.universityid = ".$this->id;
+    }
+    else
+    {
+      $update_query = "UPDATE universities SET name = '".$this->name."', website = '".$this->website."', description = \"".$des."\" WHERE universities.universityid = ".$this->id;
+    }
     return $this->query($update_query);
+    // return $update_query;
   }
 
   private function updateFields($row)
