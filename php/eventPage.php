@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
 {
   if (isset($_GET['id']))
   {
-    $event = new rso_info();
+    $event = new event_info();
     if (!$event->updateOnId($_GET['id']))
     {
       $event = null;
@@ -159,28 +159,24 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
            <!-- this is the container where the individual page for the University comes up -->
 
            <div class="container" style="width:50%; margin:0 auto;">
-             <h1><?php echo $univ->name; ?></h1>
+             <h1><?php echo $event->name; ?></h1>
 
              <div class="container" style="width:100%; display:block;">
-               <?php if ($univ->super == $curruser->id){ ?>
+               <?php if ($event->adminid == $curruser->id){ ?>
                <button class = "buttonEdit" type="submit" name="edit" onclick="window.open('<?php echo "../php/universityPage.php?id=".$univ->id."&edit=1"; ?>', '_parent')">Edit</button>
                <?php } ?>
 
                <button class = "buttonLogin" type="submit" name="join">Join</button>
              </div>
 
-             <br>
-             <?php echo "<label><b>Website: </b></label>" ; echo $univ->website; ?>
-             <br>
-
-             <?php echo "<label><b>Email: </b></label>"; echo $univ->email; ?>
+             <?php echo "<label><b>Email: </b></label>"; echo $event->email; ?>
              <br>
              <br>
 
              <!-- columns divs, float left, no margin so there is no space between column, width=1/3 -->
               <div style="display:block;">
                 <div id="column1" style="float:left; margin:0; width:50%;">
-                 <p><?php echo $univ->description; ?></p>
+                 <p><?php echo $event->description; ?></p>
                 </div>
 
                 <div id="column2" style="float:left; margin:0; width:50%;">
