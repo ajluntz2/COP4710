@@ -114,7 +114,13 @@
 
 			<h5 style="display: inline;">Email:</h5>
             <input type="text" class="form-control" name = "email" placeholder="admin@ucf.edu" required></br>
+
+            <h5 style="display: inline;">Address:</h5>
+            <input type="text" class="form-control" id='address' name = "address" placeholder="Click on map below for the address" required></br>
             <h5 class = "empty-space"></h5>
+
+            <h5 style="display: inline;">Description:</h5>
+            <textarea type="text" class="form-control" name = "description"required><p>&nbsp;</p></textarea>
 
             <button class="register-button" type="submit" name="register">Register</button>
             <h5 class = "empty-space"></h5>
@@ -158,16 +164,17 @@
         // Listen for the event fired when the user selects a prediction and retrieve
         // more details for that place.
         google.maps.event.addListener(map, 'click', function(event) {
-  geocoder.geocode({
-    'latLng': event.latLng
-  }, function(results, status) {
-    if (status == google.maps.GeocoderStatus.OK) {
-      if (results[0]) {
-        alert(results[0].formatted_address);
-      }
-    }
-  });
-});
+        geocoder.geocode({
+            'latLng': event.latLng
+            }, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[0]) {
+                    alert(results[0].formatted_address);
+                    document.getElementById('address').value = results[0].formatted_address;
+                    }
+                }
+            });
+        });
       }
 
       function addMarker(pos) {
@@ -201,5 +208,8 @@
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSVinGJtXybbaYrT5XLRQhSwY9x3Tbxfo&libraries=places&callback=initAutocomplete"
          async defer></script>
+
+
+
   </body>
 </html>
