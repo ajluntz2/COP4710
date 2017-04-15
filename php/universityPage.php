@@ -210,6 +210,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                       <input type="text" class="form-control" name = "email" value="<?php echo $univ->email; ?>"></br>
                       <br>
 
+                      <h5 style="display: inline;">Address:</h5>
+                      <input type="text" class="form-control" name = "address" value="<?php echo $location->updateOnId($univ->locationid); ?>"></br>
+                      <br>
+
                       <h5 style="display: inline;">Description:</h5>
                       <textarea type="text" class="form-control" name = "description" required><?php echo $univ->description; ?></textarea>
                       <br>
