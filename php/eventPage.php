@@ -14,29 +14,63 @@ $event = null;
 $search = '';
 $after = 0;
 $limit = 25;
-if ($_SERVER['REQUEST_METHOD'] == "GET")
+$editing = false;
+
+if (isset($_GET['id']))
 {
-  if (isset($_GET['id']))
-  {
     $event = new event_info();
     if (!$event->updateOnId($_GET['id']))
     {
       $event = null;
     }
-  }
-  if (isset($_GET['search']))
-  {
-    $search = $_GET['search'];
-  }
-  if (isset($_GET['after']))
-  {
-    $after = $_GET['after'];
-  }
-  if (isset($_GET['limit']))
-  {
-    $limit = $_GET['limit'];
-  }
 }
+
+if (isset($_GET['search']))
+{
+    $search = $_GET['search'];
+}
+
+if (isset($_GET['after']))
+{
+    $after = $_GET['after'];
+}
+
+if (isset($_GET['limit']))
+{
+    $limit = $_GET['limit'];
+}
+
+if (isset($_GET['edit']) && $_GET['edit'] == 1 && $event !== null && $event->adminid == $curruser->id)
+{
+    $editing = true;
+}
+
+if (isset($_GET['unattend']) && $_GET['attend'] == 0)
+{
+    $event->attending = 0;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == "POST")
+{
+    if ($event !== null)
+    {
+      $event->name = $_POST['name'];
+      $event->category = $POST['category'];
+      $event->description = $_POST['description'];
+      $event->$startdate = $_POST['$startdate'];
+      $event->$time = $_POST['$time'];
+      $event->$length = $_POST['$length'];
+      $event->$days = $_POST['$days'];
+      $event->$enddate = $_POST['$enddate'];
+      $event->$frequency = $_POST['$frequency'];
+      $event->$email = $_POST['$email'];
+      $event->$phone = $_POST['$phone'];
+      $event->$approved = $_POST['$approved'];
+
+      echo $event->syncFields();
+    }
+}
+
 ?>
 
 <html lang = "en">
@@ -161,13 +195,66 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
            <div class="container" style="width:50%; margin:0 auto;">
              <h1><?php echo $event->name; ?></h1>
 
+             <?php if ($editing) { ?>
+                 <form class = "form-register" role = "form" action = "../php/eventPage.php?id=<?php echo $event->id; ?>" method = "post">
+
+                 <div class="container" style="width:100%; display:block;">
+                     <button class = "buttonEdit" type="submit" name="save">Save</button>
+                 </div>
+
+                 <div style="display:block;">
+                     <div id="column1" style="float:left; margin:0; width:50%;">
+
+                         <h5 style="display: inline;">Name:</h5>
+                         <input type="text" class="form-control" name = "name" value="<?php echo $univ->name; ?>" required autofocus ></br>
+
+                         <br>
+                         <h5 style="display: inline;">Website:</h5>
+                         <input type="text" class="form-control" name = "website" value="<?php echo $univ->website; ?>" required></br>
+                         <br>
+
+                         <h5 style="display: inline;">Email:</h5>
+                         <input type="text" class="form-control" name = "email" value="<?php echo $univ->email; ?>"></br>
+                         <br>
+
+                         <h5 style="display: inline;">Address:</h5>
+                         <input type="text" class="form-control" name = "address" value="<?php echo $location->updateOnId($univ->locationid); ?>"></br>
+                         <br>
+
+                         <h5 style="display: inline;">Description:</h5>
+                         <textarea type="text" class="form-control" name = "description" required><?php echo $univ->description; ?></textarea>
+                         <br>
+
+                     </div>
+
+                   <div id="column2" style="float:left; margin:0; width:50%;">
+                       <div id="map" style="height: 50%; width:100%;"></div>
+                   </div>
+               </div>
+
+
+
+             </form>
+             <?php } else { ?>
+
              <div class="container" style="width:100%; display:block;">
+
                <?php if ($event->adminid == $curruser->id){ ?>
-               <button class = "buttonEdit" type="submit" name="edit" onclick="window.open('<?php echo "../php/universityPage.php?id=".$univ->id."&edit=1"; ?>', '_parent')">Edit</button>
+               <button class = "buttonEdit" type="submit" name="edit" onclick="window.open('<?php echo "../php/eventPage.php?id=".$event->id."&edit=1"; ?>', '_parent')">Edit</button>
                <?php } ?>
 
-               <button class = "buttonLogin" type="submit" name="join">Join</button>
-             </div>
+               <?php if ($event->attending) { ?>
+
+                   <button class = "buttonLogin" value="unattend" type="submit" name="unattend" onclick="window.open('<?php echo "../php/eventPage.php?id=".$event->id ?>', '_parent')">Unattend</button>
+
+               <?php } else { ?>
+
+               <button class = "buttonLogin" value="attend" type="submit" name="attend" onclick="window.open('<?php echo "../php/eventPage.php?id=".$event->id ?>', '_parent')">Attend</button>
+
+
+              <?php } ?>
+
+              </div>
 
              <?php echo "<label><b>Email: </b></label>"; echo $event->email; ?>
              <br>
@@ -185,6 +272,8 @@ if ($_SERVER['REQUEST_METHOD'] == "GET")
               </div>
 
          </div>
+
+         <?php } ?>
        <?php } else { ?>
          <?php
 

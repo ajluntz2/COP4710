@@ -227,7 +227,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 <option value="Seasonal & Holiday">Seasonal & Holiday</option>
                 <option value="Sports & Fitness">Sports & Fitness</option>
                 <option value="Travel & Outdoor">Travel & Outdoor</option>
-			        </select>
+			  </select>
+
+             <h5 style="display: inline;">Event Visibility:</h5>
+              <select name="visibility">
+                <option value="Public">Public</option>
+                <option value="Private">Private</option>
+                <option value="RSO">RSO</option>
+             </select>
 
               <h5 style="display: inline;">RSO:</h5>
               <select name="rso">
@@ -275,6 +282,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
               <h5 style="display: inline;">Contact Email:</h5>
               <input type="text" class="form-control" name = "eventContactEmail" placeholder="admin@yourevent.com" required><br>
 
+              <h5 style="display: inline;">Address:</h5>
+              <input type="text" class="form-control" id='address' name = "address" placeholder="Click on map below for the address" required></br>
+              <h5 class = "empty-space"></h5>
+
               <h5 style="display: block; padding:0px; padding-top: 0px;">Description:</h5>
               <textarea type="text" class="form-control" name = "description"required><p>&nbsp;</p></textarea>
 
@@ -307,6 +318,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             zoom: 15,
             mapTypeId: 'roadmap'
           });
+          var geocoder = new google.maps.Geocoder();
+          var infowindow = new google.maps.InfoWindow();
 
           // Create the search box and link it to the UI element.
           var input = document.getElementById('pac-input');
@@ -321,50 +334,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
           var markers = [];
           // Listen for the event fired when the user selects a prediction and retrieve
           // more details for that place.
-          searchBox.addListener('places_changed', function() {
-            var places = searchBox.getPlaces();
-
-            if (places.length == 0) {
-              return;
-            }
-
-            // Clear out the old markers.
-            markers.forEach(function(marker) {
-              marker.setMap(null);
-            });
-            markers = [];
-
-            // For each place, get the icon, name and location.
-            var bounds = new google.maps.LatLngBounds();
-            places.forEach(function(place) {
-              if (!place.geometry) {
-                console.log("Returned place contains no geometry");
-                return;
-              }
-              var icon = {
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25)
-              };
-
-              // Create a marker for each place.
-              markers.push(new google.maps.Marker({
-                map: map,
-                icon: icon,
-                title: place.name,
-                position: place.geometry.location
-              }));
-
-              if (place.geometry.viewport) {
-                // Only geocodes have viewport.
-                bounds.union(place.geometry.viewport);
-              } else {
-                bounds.extend(place.geometry.location);
-              }
-            });
-            map.fitBounds(bounds);
+          google.maps.event.addListener(map, 'click', function(event) {
+          geocoder.geocode({
+              'latLng': event.latLng
+              }, function(results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                      if (results[0]) {
+                      document.getElementById('address').value = results[0].formatted_address;
+                      }
+                  }
+              });
           });
         }
 

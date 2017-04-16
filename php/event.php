@@ -10,7 +10,7 @@ class event_info extends database_table
   public $rsoid = -1;
   public $universityid = -1;
   public $ratingid = -1;
-  public $catigory = '';
+  public $category = '';
   public $description = '';
   public $startdate = '';
   public $time = '';
@@ -21,6 +21,7 @@ class event_info extends database_table
 
   public $email = '';
   public $phone = -1;
+  public $attending = -1;
 
   public $approved = false;
 
@@ -30,7 +31,7 @@ class event_info extends database_table
   }
 
   function addEvent($userid, $universityid, $locationid,
-                    $rsoid, $ratingid, $name, $catigory,
+                    $rsoid, $ratingid, $name, $category,
                     $description, $startdate, $enddate,
                     $days, $time, $length,
                     $frequency,
@@ -40,10 +41,10 @@ class event_info extends database_table
 
     $insert_query = "
     INSERT INTO events(  name   ,    adminid  ,    locationid  ,    rsoid  ,    universityid  ,    ratingid  ,
-                         catigory  ,    description  ,    startdate  ,    time  ,    length  ,    days  ,
+                         category  ,    description  ,    startdate  ,    time  ,    length  ,    days  ,
                          enddate  ,    frequency   ,    email  ,    phone)
     VALUES            ('".$name."', '".$userid."', ".$locationid.", ".$rsoid.", '".$universityid."', '".$ratingid."',
-                       '".$catigory."', \"".$des."\"   , '".$startdate."', '".$time."', '".$length."', '".$days."',
+                       '".$category."', \"".$des."\"   , '".$startdate."', '".$time."', '".$length."', '".$days."',
                        '".$enddate."', '".$frequency."', '".$email."', '".$phone."')
     ";
 
@@ -98,13 +99,14 @@ class event_info extends database_table
       website = '".$this->website."',
       email = '".$this->email."',
       phone = '".$this->phone."',
-      catigory = '".$this->catigory."',
+      category = '".$this->category."',
       time = '".$this->time."',
       days = '".$this->days."',
       enddate = '".$this->enddate."',
       frequency = '".$this->frequency."',
       approved = '".$this->approved."',
       description = \"".$des."\"
+      attending = '".$this->attending."',
     WHERE
       events'.eventid = ".$this->id;
 
@@ -121,7 +123,7 @@ class event_info extends database_table
     $this->rsoid = $row['rsoid'];
     $this->universityid = $row['universityid'];
     $this->ratingid = $row['ratingid'];
-    $this->catigory = $row['catigory'];
+    $this->category = $row['category'];
     $this->description = $row['description'];
     $this->startdate = $row['startdate'];
     $this->time = $row['time'];
@@ -131,6 +133,7 @@ class event_info extends database_table
     $this->frequency = $row['frequency'];
     $this->email = $row['email'];
     $this->phone = $row['phone'];
+    $this->attending = $row['attending'];
     $this->approved = $row['approved'];
   }
 }

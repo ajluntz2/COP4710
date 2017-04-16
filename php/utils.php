@@ -260,7 +260,7 @@
     {
       return '';
     }
-    return gen_card($event->name, '../php/eventPage.php?id='.$event->id, 'RSO',$event->description,'',$event->approved,$event->startdate);
+    return gen_card($event->name, '../php/eventPage.php?id='.$event->id, 'Event',$event->description,'',$event->approved,$event->startdate);
   }
 
   function gen_user_card($id)
@@ -337,9 +337,13 @@
     <div class='slider'> ";
 
     $events = $event->search('attending', $userid);
-    foreach ($events as &$event)
+
+    if($events != null)
     {
-      $slider .= gen_event_card($event['eventid']);
+        foreach ($events as &$event)
+        {
+          $slider .= gen_event_card($event['eventid']);
+        }
     }
 
     return $slider.$end;
@@ -510,6 +514,25 @@
     foreach ($rsos as &$rso)
     {
       $tag .= "<option value='".$rso['rsoid']."'>".$rso['name']."</option>";
+    }
+    return $tag;
+  }
+
+  function gen_event_options($userid)
+  {
+    $event = new event_info();
+    // I need to change memberid for the relevent variable
+    $events = $event->search('memberid', $userid, -1);
+
+    if ($events == null)
+    {
+      return '';
+    }
+
+    $tag = '';
+    foreach ($events as &$event)
+    {
+      $tag .= "<option value='".$event['eventid']."'>".$event['name']."</option>";
     }
     return $tag;
   }
