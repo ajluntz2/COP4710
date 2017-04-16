@@ -336,8 +336,19 @@
     $slider = "
     <div class='slider'> ";
 
-    $events = $event->search('attending', $userid);
+    $query = "
+    SELECT
+      *
+    FROM
+      events AS E
+    JOIN
+      attending AS A
+    ON
+      E.eventid = A.eventid
+    WHERE
+      A.userid = ".$userid;
 
+    $events = $event->queryRows($query);
     if($events != null)
     {
         foreach ($events as &$event)
@@ -413,7 +424,28 @@
     $tableList = $tableList.gen_search_bar($search, $prevpage, $count);
 
     $event = new event_info();
-    $events = $event->searchAfter('name', $search, 'eventid', $after, $count);
+    $curruser = new user_info();
+    $curruser->updateOnId($_SESSION['userid']);
+
+    $query = "
+    SELECT DISTINCT E.* FROM events AS E, rsos AS R, members AS M
+    WHERE (
+        E.eventid > ".$after." AND (
+        E.privacy = 'PUBLIC' OR
+        (
+          E.privacy = 'PRIVATE' AND
+          E.universityid = ".$curruser->universityid."
+        ) OR
+        (
+          E.privacy = 'RSO' AND
+          R.rsoid = R.rsoid AND
+          R.rsoid = M.rsoid
+        )
+      ) AND
+      E.name LIKE '%".$search."%'
+    )
+    LIMIT ".$count."";
+    $events = $event->queryRows($query);
     if ($events !== null)
     {
       foreach ($events as &$event)

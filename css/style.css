@@ -18,6 +18,11 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
 }
 
+img {
+  max-height: 90%;
+  max-width: 100%;
+}
+
 .container {
   outline: none;
   border: none;

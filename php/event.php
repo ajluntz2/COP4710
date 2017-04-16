@@ -21,9 +21,10 @@ class event_info extends database_table
 
   public $email = '';
   public $phone = -1;
-  public $attending = -1;
 
   public $approved = false;
+
+  public $privacy = '';
 
   function __construct()
   {
@@ -105,8 +106,8 @@ class event_info extends database_table
       enddate = '".$this->enddate."',
       frequency = '".$this->frequency."',
       approved = '".$this->approved."',
-      description = \"".$des."\"
-      attending = '".$this->attending."',
+      description = \"".$des."\",
+      privacy = '".$this->privacy."'
     WHERE
       events'.eventid = ".$this->id;
 
@@ -133,8 +134,8 @@ class event_info extends database_table
     $this->frequency = $row['frequency'];
     $this->email = $row['email'];
     $this->phone = $row['phone'];
-    $this->attending = $row['attending'];
     $this->approved = $row['approved'];
+    $this->privacy = $row['privacy'];
   }
 }
 ?>

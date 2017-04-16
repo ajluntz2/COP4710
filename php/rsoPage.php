@@ -16,7 +16,7 @@ $after = 0;
 $limit = 25;
 $editing = false;
 
-
+$ismember = false;
 
 if (isset($_GET['id']))
 {
@@ -25,6 +25,26 @@ if (isset($_GET['id']))
     if (!$rso->updateOnId($_GET['id']))
     {
         $rso = null;
+    }
+    else
+    {
+      $query = "
+      SELECT
+        *
+      FROM
+        rsos AS R
+      JOIN
+        members AS M
+      ON
+        R.rsoid = M.rsoid
+      WHERE
+        M.userid = ".$curruser->id;
+
+      $rsos = $rso->queryRows($query);
+      if ($rsos !== null)
+      {
+        $ismember = true;
+      }
     }
 }
 
@@ -108,9 +128,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                    <button class = "buttonEdit" type="submit" name="edit" onclick="window.open('<?php echo "../php/rsoPage.php?id=".$rso->id."&edit=1"; ?>', '_parent')">Edit</button>
                    <?php } ?>
 
-                   <?php if ($rso->universityid == $curruser->universityid){ ?>
-                   <button class = "buttonLogin" type="submit" name="join">Join</button>
-                   <?php } ?>
+                    <?php if ($ismember) { ?>
+                       <form action='../php/rsoJoin.php?join=0&id=<?php echo $rso->id; ?>' method="POST">
+                         <button class = "buttonLogin" value="attend" type="submit" name="join">Unjoin</button>
+                       </form>
+                    <?php } else { ?>
+                    <?php if ($rso->universityid == $curruser->universityid){ ?>
+                      <form action='../php/rsoJoin.php?join=1&id=<?php echo $rso->id; ?>' method="POST">
+                       <button class = "buttonLogin" type="submit" name="join">Join</button>
+                     </form>
+                    <?php } ?>
+                    <?php } ?>
                  </div>
 
                   <div style="float:left; margin:0; max-width:50%;">

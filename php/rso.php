@@ -8,7 +8,6 @@ class rso_info extends database_table
   public $adminid = -1;
   public $universityid = -1;
   public $approved = -1;
-  public $memberid = -1;
   public $description = null;
 
   function __construct()
@@ -48,13 +47,20 @@ class rso_info extends database_table
       return null;
     }
     $insert_query = "
-    INSERT INTO rsos(name, universityid, description, adminid, memberid)
-    VALUES ('".$name."', ".$univid.", '".$description."', ".$adminid.", ".$adminid.")";
+    INSERT INTO rsos(name, universityid, description, adminid)
+    VALUES ('".$name."', ".$univid.", '".$description."', ".$adminid.")";
 
     $this->query($insert_query);
     $regrso = new rso_info();
     if (!$regrso->updateOnName($name))
     {
+      $update = "
+        INSERT INTO members
+          (rsoid, userid)
+        VALUES
+          (".$regrso->id.", ".$adminid.")";
+      $regrso->query($update);
+
       return $regrso;
     }
     return null;
@@ -62,7 +68,11 @@ class rso_info extends database_table
 
   function getOnMember($userid)
   {
-    $query = "SELECT * FROM rsos WHERE memberid = ".$userid;
+    $query = "SELECT R
+    FROM rsos AS R
+    JOIN members AS M
+    ON R.rsoid = M.rsoid
+    WHERE M.userid = $userid";
     return $this->queryRows($query);
   }
 
@@ -84,7 +94,6 @@ class rso_info extends database_table
     $this->name = $row['name'];
     $this->universityid = $row['universityid'];
     $this->approved = $row['approved'];
-    $this->memberid = $row['memberid'];
     $this->description = $row['description'];
   }
 }

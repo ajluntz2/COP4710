@@ -230,7 +230,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			  </select>
 
              <h5 style="display: inline;">Event Visibility:</h5>
-              <select name="visibility">
+              <select name="privacy">
                 <option value="Public">Public</option>
                 <option value="Private">Private</option>
                 <option value="RSO">RSO</option>

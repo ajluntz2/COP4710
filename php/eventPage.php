@@ -16,12 +16,34 @@ $after = 0;
 $limit = 25;
 $editing = false;
 
+$attending = false;
+
 if (isset($_GET['id']))
 {
     $event = new event_info();
     if (!$event->updateOnId($_GET['id']))
     {
       $event = null;
+    }
+    else
+    {
+      $query = "
+      SELECT
+        *
+      FROM
+        events AS E
+      JOIN
+        attending AS A
+      ON
+        E.eventid = A.eventid
+      WHERE
+        A.userid = ".$curruser->id;
+
+      $events = $event->queryRows($query);
+      if ($events !== null)
+      {
+        $attending = true;
+      }
     }
 }
 
@@ -45,27 +67,23 @@ if (isset($_GET['edit']) && $_GET['edit'] == 1 && $event !== null && $event->adm
     $editing = true;
 }
 
-if (isset($_GET['unattend']) && $_GET['attend'] == 0)
-{
-    $event->attending = 0;
-}
-
 if ($_SERVER['REQUEST_METHOD'] == "POST")
 {
     if ($event !== null)
     {
       $event->name = $_POST['name'];
-      $event->category = $POST['category'];
+      // $event->category = $POST['category'];
       $event->description = $_POST['description'];
-      $event->$startdate = $_POST['$startdate'];
-      $event->$time = $_POST['$time'];
-      $event->$length = $_POST['$length'];
-      $event->$days = $_POST['$days'];
-      $event->$enddate = $_POST['$enddate'];
-      $event->$frequency = $_POST['$frequency'];
-      $event->$email = $_POST['$email'];
-      $event->$phone = $_POST['$phone'];
-      $event->$approved = $_POST['$approved'];
+      // $event->startdate = $_POST['startdate'];
+      // $event->time = $_POST['time'];
+      // $event->length = $_POST['length'];
+      // $event->days = $_POST['days'];
+      // $event->enddate = $_POST['enddate'];
+      // $event->frequency = $_POST['frequency'];
+      $event->website = $_POST['website'];
+      $event->email = $_POST['email'];
+      // $event->phone = $_POST['phone'];
+      // $event->approved = $_POST['approved'];
 
       echo $event->syncFields();
     }
@@ -243,14 +261,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                <button class = "buttonEdit" type="submit" name="edit" onclick="window.open('<?php echo "../php/eventPage.php?id=".$event->id."&edit=1"; ?>', '_parent')">Edit</button>
                <?php } ?>
 
-               <?php if ($event->attending) { ?>
+               <?php if ($attending) { ?>
 
+                 <form action='../php/eventJoin.php?attend=0&id=<?php echo $event->id; ?>' method="POST">
                    <button class = "buttonLogin" value="unattend" type="submit" name="unattend" onclick="window.open('<?php echo "../php/eventPage.php?id=".$event->id ?>', '_parent')">Unattend</button>
-
+                 </form>
                <?php } else { ?>
 
-               <button class = "buttonLogin" value="attend" type="submit" name="attend" onclick="window.open('<?php echo "../php/eventPage.php?id=".$event->id ?>', '_parent')">Attend</button>
-
+               <form action='../php/eventJoin.php?attend=1&id=<?php echo $event->id; ?>' method="POST">
+                 <button class = "buttonLogin" value="attend" type="submit" name="attend">Attend</button>
+               </form>
 
               <?php } ?>
 
@@ -270,6 +290,16 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                   <div id="map" style="height: 50%; width:100%;"></div>
                 </div>
               </div>
+
+              <div id="fb-root"></div>
+              <script>(function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
+                fjs.parentNode.insertBefore(js, fjs);
+              }(document, 'script', 'facebook-jssdk'));</script>
+              <div class="fb-comments" data-href="https://localhost/eventPage.php" data-numposts="5"></div>
 
          </div>
 
