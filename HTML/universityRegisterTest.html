@@ -169,7 +169,6 @@
             }, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     if (results[0]) {
-                    alert(results[0].formatted_address);
                     document.getElementById('address').value = results[0].formatted_address;
                     }
                 }
