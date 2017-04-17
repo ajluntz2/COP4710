@@ -2,12 +2,12 @@ form {
   border: 3px solid #f1f1f1;
 }
 
-body {
+/*body {
   background-image: url("http://www.publicdomainpictures.net/pictures/130000/velka/turquoise-top-gradient-background.jpg");
   background-color: #cccccc;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-}
+}*/
 
 input[type=text], input[type=password] {
   width: 100%;

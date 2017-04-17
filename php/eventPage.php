@@ -299,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                 js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8";
                 fjs.parentNode.insertBefore(js, fjs);
               }(document, 'script', 'facebook-jssdk'));</script>
-              <div class="fb-comments" data-href="https://localhost/eventPage.php" data-numposts="5"></div>
+              <div class="fb-comments" data-href="https://localhost/eventPage.php?id=<?php echo $event->id; ?>" data-numposts="5"></div>
 
          </div>
 
