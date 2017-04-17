@@ -7,7 +7,6 @@ require_once('university.php');
 ?>
 
 <?php
-
 $curruser = new user_info();
 $curruser->updateOnId($_SESSION['userid']);
 if ($_SERVER["REQUEST_METHOD"] == "POST")

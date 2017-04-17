@@ -97,7 +97,6 @@ class event_info extends database_table
     UPDATE events
     SET
       name = '".$this->name."',
-      website = '".$this->website."',
       email = '".$this->email."',
       phone = '".$this->phone."',
       category = '".$this->category."',
@@ -109,7 +108,7 @@ class event_info extends database_table
       description = \"".$des."\",
       privacy = '".$this->privacy."'
     WHERE
-      events'.eventid = ".$this->id;
+      events.eventid = ".$this->id;
 
     return $this->query($update_query);
     // return $update_query;

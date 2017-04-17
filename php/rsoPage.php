@@ -29,15 +29,12 @@ if (isset($_GET['id']))
     else
     {
       $query = "
-      SELECT
+      SELECT DISTINCT
         *
       FROM
-        rsos AS R
-      JOIN
         members AS M
-      ON
-        R.rsoid = M.rsoid
       WHERE
+        M.rsoid = ".$rso->id." AND
         M.userid = ".$curruser->id;
 
       $rsos = $rso->queryRows($query);
@@ -75,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
       $rso->name = $_POST['name'];
       $rso->description = $_POST['description'];
 
-      echo $rso->syncFields();
+      $rso->syncFields();
     }
 }
 

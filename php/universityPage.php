@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
     $univ->email = $_POST['email'];
     $univ->description = $_POST['description'];
 
-    echo $univ->syncFields();
+    $univ->syncFields();
   }
 }
 ?>
@@ -210,10 +210,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                       <input type="text" class="form-control" name = "email" value="<?php echo $univ->email; ?>"></br>
                       <br>
 
-                      <h5 style="display: inline;">Address:</h5>
-                      <input type="text" class="form-control" name = "address" value="<?php echo $location->updateOnId($univ->locationid); ?>"></br>
-                      <br>
-
                       <h5 style="display: inline;">Description:</h5>
                       <textarea type="text" class="form-control" name = "description" required><?php echo $univ->description; ?></textarea>
                       <br>
@@ -250,6 +246,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
               </div>
             </div>
 
+
+             <div style="display:block;">
+               <div id="column1" style="margin:0; width:50%;">
+                <?php if ($curruser->id == $univ->super) {
+                  echo gen_rso_approve_list($univ->id);
+                  echo gen_event_approve_list($univ->id);
+                } ?>
+               </div>
+
+               <div id="column2" style="display:inline-block; margin:0; width:50%;">
+                 <?php echo gen_event_slider_on_univ($univ->id); ?>
+               </div>
+             </div>
             <?php } ?>
 
          </div>

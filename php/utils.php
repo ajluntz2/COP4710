@@ -202,7 +202,7 @@
     return $navbar.$end;
   }
 
-  function gen_card($title, $cardlink, $type, $mid, $link, $approved=true, $date='')
+  function gen_card($title, $cardlink, $type, $mid, $link, $approved=true, $date='', $super=false)
   {
     $card = "<div class='card' onclick=\"window.open('".$cardlink."', '_parent')\">";
 
@@ -329,6 +329,85 @@
     return $slider.$end;
   }
 
+  function gen_rso_approve_list($univid)
+  {
+    $end = "</div>";
+    $slider = "
+    <div class='slider'> ";
+    $rsos = new rso_info();
+    $query = "
+    SELECT DISTINCT R.*
+    FROM
+      rsos AS R
+    WHERE
+      (
+        SELECT COUNT(M.rsoid)
+        FROM members AS M
+        WHERE M.rsoid = R.rsoid
+      ) >= 5 AND
+      R.approved = 0 AND
+      R.universityid = ".$univid;
+
+    $rsos = $rsos->queryRows($query);
+    if ($rsos == null)
+    {
+      return '';
+    }
+
+    foreach ($rsos as &$rso)
+    {
+      $slider .= "
+      <div class='card'>
+        <a class='title'>".$rso['name']."</a>
+        <form method='POST' action='../php/rsoApprove.php?id=".$rso['rsoid']."'>
+          <button class='buttonLogin' type='submit' name='Approve'>Approve</button>
+        </form>
+        <a class='type'>RSO</a>
+        <a class='description'>".$rso['description']."</a>
+      </div>
+      ";
+    }
+
+    return $slider.$end;
+  }
+
+    function gen_event_approve_list($univid)
+    {
+      $end = "</div>";
+      $slider = "
+      <div class='slider'> ";
+      $event = new event_info();
+      $query = "
+      SELECT DISTINCT E.*
+      FROM
+        events AS E
+      WHERE
+        E.approved = 0 AND
+        E.universityid = ".$univid;
+
+      $events = $event->queryRows($query);
+      if ($events == null)
+      {
+        return '';
+      }
+
+      foreach ($events as &$event)
+      {
+        $slider .= "
+        <div class='card'>
+          <a class='title'>".$event['name']."</a>
+          <form method='POST' action='../php/eventApprove.php?id=".$event['eventid']."'>
+            <button class='buttonLogin' type='submit' name='Approve'>Approve</button>
+          </form>
+          <a class='type'>Event</a>
+          <a class='description'>".$event['description']."</a>
+        </div>
+        ";
+      }
+
+      return $slider.$end;
+    }
+
   function gen_event_slider($userid)
   {
     $event = new event_info();
@@ -347,6 +426,34 @@
       E.eventid = A.eventid
     WHERE
       A.userid = ".$userid;
+
+    $events = $event->queryRows($query);
+    if($events != null)
+    {
+        foreach ($events as &$event)
+        {
+          $slider .= gen_event_card($event['eventid']);
+        }
+    }
+
+    return $slider.$end;
+  }
+
+  function gen_event_slider_on_univ($univid)
+  {
+    $event = new event_info();
+    $end = "</div>";
+    $slider = "
+    <div class='slider'> ";
+
+    $query = "
+    SELECT DISTINCT
+      E.*
+    FROM
+      events AS E, universities AS U
+    WHERE
+      E.approved = 1 AND
+      E.universityid = ".$univid;
 
     $events = $event->queryRows($query);
     if($events != null)
@@ -535,17 +642,23 @@
   function gen_rso_options($userid)
   {
     $rso = new rso_info();
-    $rsos = $rso->search('memberid', $userid, -1);
+    $query = "
+    SELECT * FROM members
+    WHERE
+      userid = ".$userid."
+    ";
 
+    $rsos = $rso->queryRows($query);
     if ($rsos == null)
     {
       return '';
     }
 
     $tag = '';
-    foreach ($rsos as &$rso)
+    foreach ($rsos as &$members)
     {
-      $tag .= "<option value='".$rso['rsoid']."'>".$rso['name']."</option>";
+      $rso->updateOnId($members['rsoid']);
+      $tag .= "<option value='".$rso->id."'>".$rso->name."</option>";
     }
     return $tag;
   }

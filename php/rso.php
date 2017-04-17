@@ -68,11 +68,11 @@ class rso_info extends database_table
 
   function getOnMember($userid)
   {
-    $query = "SELECT R
-    FROM rsos AS R
-    JOIN members AS M
-    ON R.rsoid = M.rsoid
-    WHERE M.userid = $userid";
+    $query = "SELECT R.*
+    FROM rsos AS R, members AS M
+    WHERE
+      R.rsoid = M.rsoid AND
+      M.userid = ".$userid;
     return $this->queryRows($query);
   }
 
@@ -86,6 +86,22 @@ class rso_info extends database_table
       return true;
     }
     return false;
+  }
+
+  function syncFields()
+  {
+    $des = mysqli_real_escape_string($this->getDatabase()->_con,$this->description);
+
+    $update_query = "
+    UPDATE rsos
+    SET
+      name = '".$this->name."',
+      approved = '".$this->approved."',
+      description = \"".$des."\"
+    WHERE
+      rsos.rsoid = ".$this->id;
+
+    return $this->query($update_query);
   }
 
   private function updateFields($row)

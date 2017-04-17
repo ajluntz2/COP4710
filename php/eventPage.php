@@ -17,6 +17,7 @@ $limit = 25;
 $editing = false;
 
 $attending = false;
+$rating = 0.0;
 
 if (isset($_GET['id']))
 {
@@ -28,21 +29,39 @@ if (isset($_GET['id']))
     else
     {
       $query = "
-      SELECT
+      SELECT DISTINCT
         *
       FROM
-        events AS E
-      JOIN
         attending AS A
-      ON
-        E.eventid = A.eventid
       WHERE
+        A.eventid = ".$event->id." AND
         A.userid = ".$curruser->id;
 
       $events = $event->queryRows($query);
       if ($events !== null)
       {
         $attending = true;
+      }
+
+      $query = "
+      SELECT *
+      FROM
+        ratings
+      WHERE
+        ratingid = ".$event->ratingid;
+      $r = $event->simpleQuery($query);
+      if ($r !== null)
+      {
+        $sum = $r['one']+$r['two']+$r['three']+$r['four']+$r['five'];
+
+        if ($sum > 0)
+        {
+          $rating = $r['one']/$sum+
+                    2.0*($r['two']/$sum)+
+                    3.0*($r['three']/$sum)+
+                    4.0*($r['four']/$sum)+
+                    5.0*($r['five']/$sum);
+        }
       }
     }
 }
@@ -85,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
       // $event->phone = $_POST['phone'];
       // $event->approved = $_POST['approved'];
 
-      echo $event->syncFields();
+      $event->syncFields();
     }
 }
 
@@ -290,6 +309,25 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                   <div id="map" style="height: 50%; width:100%;"></div>
                 </div>
               </div>
+
+              <form method='POST' action="../php/eventRate.php?id=<?php echo $event->id; ?>">
+                <h5>Rating: <?php echo $rating; ?></h5>
+                <span class="rating">
+                  <input type="radio" name="rating" value="0" <?php if (0-1 < $rating && $rating <= 0) { echo "checked"; } ?> >
+                  <label for="rating0">0</label>
+                  <input type="radio" name="rating" value="1" <?php if (1-1 < $rating && $rating <= 1) { echo "checked"; } ?> >
+                  <label for="rating1">1</label>
+                  <input type="radio" name="rating" value="2" <?php if (2-1 < $rating && $rating <= 2) { echo "checked"; } ?> >
+                  <label for="rating2">2</label>
+                  <input type="radio" name="rating" value="3" <?php if (3-1 < $rating && $rating <= 3) { echo "checked"; } ?> >
+                  <label for="rating3">3</label>
+                  <input type="radio" name="rating" value="4" <?php if (4-1 < $rating && $rating <= 4) { echo "checked"; } ?> >
+                  <label for="rating4">4</label>
+                  <input type="radio" name="rating" value="5" <?php if (5-1 < $rating && $rating <= 5) { echo "checked"; } ?> >
+                  <label for="rating5">5</label>
+                </span>
+                <button type="submit">Submit</button>
+              </form>
 
               <div id="fb-root"></div>
               <script>(function(d, s, id) {

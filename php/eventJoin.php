@@ -32,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
   {
     $delete = "DELETE FROM attending
     WHERE
-    eventid = $event->id AND
-    userid = $curruser->id";
+    eventid = ".$event->id." AND
+    userid = ".$curruser->id;
 
     $event->query($delete);
   }
