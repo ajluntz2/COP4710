@@ -18,11 +18,6 @@ $curruser->updateOnId($_SESSION['userid']);
 $success = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-  // add rating
-  // add location
-
-  $locationid = 1; // TODO: fix
-
   $eventStartTime_Hour = $_POST['eventStartTime_Hour'];
   $eventStartTime_Minute = $_POST['eventStartTime_Minute'];
 
@@ -49,6 +44,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   $rating = new rating_info();
   $rating->addRating();
   $rid = $rating->simpleQuery('SELECT MAX(ratingid) FROM ratings')['MAX(ratingid)'];
+
+  $location = new location_info();
+  $location->addLocation($_POST['address'], $_POST['lat'], $_POST['lon']);
+  $locationid = $location->simpleQuery('SELECT MAX(locationid) FROM locations')['MAX(locationid)'];
 
   $event = new event_info();
   $event = $event->addEvent(
@@ -283,8 +282,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
               <input type="text" class="form-control" name = "eventContactEmail" placeholder="admin@yourevent.com" required><br>
 
               <h5 style="display: inline;">Address:</h5>
-              <input type="text" class="form-control" id='address' name = "address" placeholder="Click on map below for the address" required></br>
+              <input type="text" class="form-control" id='address' name = "address" placeholder="Click on map below for the address" required readonly></br>
               <h5 class = "empty-space"></h5>
+
+              <input type="text" style="display:none;" id='lat' name = "lat" required readonly></br>
+              <input type="text" style="display:none;" id='lon' name = "lon" required readonly></br>
 
               <h5 style="display: block; padding:0px; padding-top: 0px;">Description:</h5>
               <textarea type="text" class="form-control" name = "description"required><p>&nbsp;</p></textarea>
@@ -390,6 +392,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                            }
                        }
                    });
+               });
+
+               google.maps.event.addListener(map, 'click', function(event) {
+                 var latitude = event.latLng.lat();
+                 var longitude = event.latLng.lng();
+
+                 document.getElementById('lat').value = latitude.toString();
+                 document.getElementById('lon').value = longitude.toString();
                });
              }
 

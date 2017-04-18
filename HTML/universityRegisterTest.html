@@ -119,6 +119,9 @@
             <input type="text" class="form-control" id='address' name = "address" placeholder="Click on map below for the address" required></br>
             <h5 class = "empty-space"></h5>
 
+            <input type="text" style="display:none;" id='lat' name = "lat" required readonly></br>
+            <input type="text" style="display:none;" id='lon' name = "lon" required readonly></br>
+
             <h5 style="display: inline;">Description:</h5>
             <textarea type="text" class="form-control" name = "description"required><p>&nbsp;</p></textarea>
 
@@ -220,6 +223,15 @@
                 }
             });
         });
+
+
+        google.maps.event.addListener(map, 'click', function(event) {
+          var latitude = event.latLng.lat();
+          var longitude = event.latLng.lng();
+
+          document.getElementById('lat').value = latitude.toString();
+          document.getElementById('lon').value = longitude.toString();
+        });
       }
 
       function addMarker(pos) {
@@ -248,6 +260,14 @@
         function getMarker()
         {
 			return marker;
+
+               google.maps.event.addListener(map, 'click', function(event) {
+                 var latitude = event.latLng.lat();
+                 var longitude = event.latLng.lng();
+
+                 document.getElementById('lat').value = latitude.toString();
+                 document.getElementById('lon').value = longitude.toString();
+               });
 		}
 
     </script>

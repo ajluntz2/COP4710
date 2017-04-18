@@ -18,6 +18,7 @@ $editing = false;
 
 $attending = false;
 $rating = 0.0;
+$location = null;
 
 if (isset($_GET['id']))
 {
@@ -63,6 +64,10 @@ if (isset($_GET['id']))
                     5.0*($r['five']/$sum);
         }
       }
+
+
+      $location = new location_info();
+      $location->updateOnId($event->locationid);
     }
 }
 
@@ -309,6 +314,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST")
                   <div id="map" style="height: 50%; width:100%;"></div>
                 </div>
               </div>
+              <script>
+                // This example adds a search box to a map, using the Google Place Autocomplete
+                // feature. People can enter geographical searches. The search box will return a
+                // pick list containing a mix of places and predicted search terms.
+
+                // This example requires the Places library. Include the libraries=places
+                // parameter when you first load the API. For example:
+                // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+                function initAutocomplete() {
+                  var latitude = <?php echo $location->latitude; ?>;
+                  var longitude = <?php echo $location->longitude; ?>;
+                  var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat:latitude, lng:longitude},
+                    zoom: 15,
+                    mapTypeId: 'roadmap'
+                  });
+
+                  marker = new google.maps.Marker({
+                   map: map,
+                   draggable: true,
+                   animation: google.maps.Animation.DROP,
+                   position: new google.maps.LatLng(latitude, longitude)
+                 });
+                 marker.addListener('click', toggleBounce);
+                }
+              </script>
+              <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSVinGJtXybbaYrT5XLRQhSwY9x3Tbxfo&libraries=places&callback=initAutocomplete"
+                   async defer></script>
 
               <form method='POST' action="../php/eventRate.php?id=<?php echo $event->id; ?>">
                 <h5>Rating: <?php echo $rating; ?></h5>

@@ -51,22 +51,12 @@ class university_info extends database_table
   }
 
   function addUniversity($superid, $locationid,
-                         $name, $website, $email)
+                         $name, $website, $email, $description='')
   {
-    $super = new user_info();
-    $location = new location_info();
-    if (!$super->updateOnId($superid) || !$location->updateOnId($locationid))
-    {
-      return null;
-    }
+    $des = mysqli_real_escape_string($this->getDatabase()->_con,$description);
 
-    if ($super->usertype !== 'SUPER')
-    {
-      return null;
-    }
-
-    $query = "INSERT INTO universities(name, website, email, locationid, super)
-              VALUES ('$name', '$website', '$email', ".$location->id.", ".$super->id.")";
+    $query = "INSERT INTO universities(universityid, name, website, email, locationid, super, description)
+              VALUES (NULL, '".$name."', '".$website."', '".$email."', ".$locationid.", ".$superid.", '".$des."')";
     $this->query($query);
 
     $univ = new university_info();

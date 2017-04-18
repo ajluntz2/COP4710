@@ -17,14 +17,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   $name = $_POST['name'];
   $website = $_POST['website'];
   $email = $_POST['email'];
-  $locationid = $_POST['locationid'];
+
+  $location = new location_info();
+  $location->addLocation($_POST['address'], $_POST['lat'], $_POST['lon']);
+  $locationid = $location->simpleQuery('SELECT MAX(locationid) FROM locations')['MAX(locationid)'];
 
   $univ = $univ->addUniversity($curruser->id, $locationid,
-                               $name, $website, $email);
+                               $name, $website, $email, $_POST['description']);
 
   if ($univ !== null)
   {
-    echo "<script type='text/javascript'>window.open('./dashboard.php','_parent');</script>";
+    echo "<script>window.open('../php/universityPage.php?id=".$univ->id."','_parent');</script>";
+  }
+  else
+  {
+    echo "<script>window.open('../php/registerUniversity.php','_parent');</script>";
   }
 }
 ?>
